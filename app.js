@@ -2,25 +2,26 @@ const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 const engine = require('ejs-mate');
 const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
 const logger = require('morgan');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const passport = require('passport');
+
 const session = require('express-session');
 
 const User = require('./models/user');
-
 const indexRouter = require('./routes/index');
+
 const usersRouter = require('./routes/users');
 
-const app = express();
-
 //connect to database
-mongoose.connect('mongodb://localhost:27017/food-recipes', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
+mongoose.connect('mongodb://mongo:27017/food-recipes', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
 });
 
 const db = mongoose.connection;
@@ -92,4 +93,5 @@ app.use(function(err, req, res, next) {
   res.redirect('back');
 });
 
-module.exports = app;
+app.listen(port);
+console.log('Connected');

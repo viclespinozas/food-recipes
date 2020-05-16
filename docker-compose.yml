@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  app:
+    image: node:12-alpine
+    command: sh -c "npm install && npm install -g nodemon && nodemon app.js"
+    ports:
+      - 3000:3000
+    working_dir: /food-recipes
+    volumes:
+      - ./:/food-recipes
+  mongo:
+    image: mongo
+    ports:
+      - 27010:27010
+    volumes:
+      - food-recipe-mongo-data:/data/db
+
+volumes:
+  food-recipe-mongo-data:

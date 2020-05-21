@@ -1,0 +1,7 @@
+<% layout('layouts/boilerplate') -%>
+<h1>New Ingredient!</h1>
+
+<form action="/ingredients" method="POST">
+    <input type="text" name="ingredient[title]" placeholder="Title">
+    <input type="submit" value="Create">
+</form>

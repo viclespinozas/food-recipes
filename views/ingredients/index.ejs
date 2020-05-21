@@ -1,0 +1,6 @@
+<% layout('layouts/boilerplate') -%>
+
+<% recentIngredients.forEach(ingredient => { %>
+    <p><%= ingredient.title %></p>
+    <a href="/ingredients/<%= ingredient.id %>">View more...</a>
+<% }); %>

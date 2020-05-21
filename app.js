@@ -13,6 +13,7 @@ const session = require('express-session');
 const User = require('./models/user');
 
 const indexRouter = require('./routes/index');
+const ingredientsRouter = require('./routes/ingredients')
 const usersRouter = require('./routes/users');
 
 //connect to database
@@ -70,6 +71,7 @@ app.use(function(req, res, next) {
 // Mount routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/ingredients', ingredientsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

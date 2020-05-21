@@ -9,12 +9,10 @@ const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const passport = require('passport');
-
 const session = require('express-session');
-
 const User = require('./models/user');
-const indexRouter = require('./routes/index');
 
+const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 //connect to database
@@ -43,6 +41,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
+app.locals.moment = require('moment');
+
 //Configure passport and sessions
 app.use(session({
 	secret: 'hang ten dude!',
@@ -58,10 +58,6 @@ passport.deserializeUser(User.deserializeUser());
 
 //title middleware
 app.use(function(req, res, next) {
-  // req.user = {
-  //   '_id' : '5e7dd2792801d822577fa9d6',
-  //   'username' : 'cassie'
-  // }
   res.locals.currentUser = req.user;
   res.locals.title = 'Food Recipes';
   res.locals.success = req.session.success || '';

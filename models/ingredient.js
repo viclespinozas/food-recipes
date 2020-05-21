@@ -3,7 +3,10 @@ const Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-paginate');
 
 const IngredientSchema = new Schema ({
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     image: [
         {
             url: String, public_id: String

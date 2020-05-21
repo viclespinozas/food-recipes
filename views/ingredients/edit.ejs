@@ -1,0 +1,7 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Edit Ingredient!</h1>
+
+<form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST">
+    <input type="text" name="title" placeholder="Title" value="<%=ingredient.title %>" />
+    <input type="submit" value="Update">
+</form>

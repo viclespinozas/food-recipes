@@ -2,8 +2,6 @@ const Ingredient = require('../models/ingredient');
 
 module.exports = {
     async ingredientIndex(req, res, next) {
-        // const ingredients = await Ingredient.find({}).sort('-_id').exec();
-        // const recentIngredients = ingredients.slice(0,5);
         const { dbQuery } = res.locals;
         let ingredients = await Ingredient.paginate(dbQuery, {
            page: req.query.page || 1,
@@ -29,10 +27,20 @@ module.exports = {
         const data = {
             title: req.body.title
         }
-        let ingredient = new Ingredient(data);
-        await ingredient.save();
-        req.session.success = 'Ingredient created successfully!';
-        res.redirect(`/ingredients/${ingredient.id}`);
+
+        let persistedIngredient = await Ingredient.findOne({
+            title: req.body.title
+        });
+
+        if (persistedIngredient.id !== null) {
+            req.session.error = 'Ya existe un ingrediente con el nombre indicado.';
+            res.redirect('back');
+        } else {
+            let ingredient = new Ingredient(data);
+            await ingredient.save();
+            req.session.success = 'Ingredient created successfully!';
+            res.redirect(`/ingredients/${ingredient.id}`);
+        }
     },
 
     async ingredientShow(req, res, next) {

@@ -7,7 +7,7 @@ module.exports = {
         const { dbQuery } = res.locals;
         let ingredients = await Ingredient.paginate(dbQuery, {
            page: req.query.page || 1,
-           limit: 2,
+           limit: 10,
            sort: {
                '_id': -1
            }

@@ -3,6 +3,8 @@
 <% include ../partials/paginateIngredients %>
 
 <% ingredients.docs.forEach(ingredient => { %>
-    <p><%= ingredient.title %></p>
-    <a href="/ingredients/<%= ingredient.id %>">View more...</a>
+    <div>
+        <span><%= ingredient.title %></span>
+        <span><a href="/ingredients/<%= ingredient.id %>">View more...</a></span>
+    </div>
 <% }); %>

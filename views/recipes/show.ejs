@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate') -%>
+
+<span><%= recipe.title %></span>
+<span><%= recipe.preparation %></span>
+<ul>
+    <% recipe.ingredients.forEach(ingredient => { %>
+        <li><%= ingredient.title %></li>
+    <% }); %>
+</ul>

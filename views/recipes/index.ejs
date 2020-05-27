@@ -1,0 +1,10 @@
+<% layout('layouts/boilerplate') %>
+
+<% include ../partials/paginateRecipes %>
+
+<% recipes.docs.forEach(recipe => { %>
+    <div>
+        <span><%= recipe.title %></span>
+        <span><a href="/recipes/<%= recipe.id %>">View more...</a></span>
+    </div>
+<% }); %>

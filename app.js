@@ -13,7 +13,8 @@ const session = require('express-session');
 const User = require('./models/user');
 
 const indexRouter = require('./routes/index');
-const ingredientsRouter = require('./routes/ingredients')
+const ingredientsRouter = require('./routes/ingredients');
+const recipesRouter = require('./routes/recipes');
 const usersRouter = require('./routes/users');
 
 //connect to database
@@ -72,6 +73,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/ingredients', ingredientsRouter);
+app.use('/recipes', recipesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -80,13 +82,6 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  // res.locals.message = err.message;
-  // res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // // render the error page
-  // res.status(err.status || 500);
-  // res.render('error');
   req.session.error = err.message;
   res.redirect('back');
 });

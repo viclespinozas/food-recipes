@@ -32,7 +32,7 @@ module.exports = {
             title: req.body.title
         });
 
-        if (persistedIngredient.id !== null) {
+        if (persistedIngredient !== null) {
             req.session.error = 'Ya existe un ingrediente con el nombre indicado.';
             res.redirect('back');
         } else {

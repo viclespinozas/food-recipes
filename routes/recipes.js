@@ -8,7 +8,8 @@ const {
     recipeIndex,
     recipeNew,
     recipeCreate,
-    recipeShow
+    recipeShow,
+    recipeEdit
 } = require('../controllers/recipes');
 
 router.get('/',
@@ -23,5 +24,7 @@ router.get('/new',
 router.post('/', asyncErrorHandler(recipeCreate));
 
 router.get('/:id', asyncErrorHandler(recipeShow));
+
+router.get('/:id/edit', asyncErrorHandler(recipeEdit));
 
 module.exports = router;

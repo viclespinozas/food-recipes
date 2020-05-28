@@ -32,8 +32,6 @@ module.exports = {
            title: req.body.title
         });
 
-        console.log(req.body);
-
         if (persistedRecipe !== null) {
             req.session.error = "Ya existe una receta con el nombre indicado.";
             res.redirect('back');
@@ -46,16 +44,14 @@ module.exports = {
     },
 
     async recipeShow(req, res, next) {
-        // let recipe = await Recipe.findById(req.params.id).populate({
-        //     path: 'ingredients',
-        //     options: { sort: { '_id': -1 } },
-        //     populate: {
-        //         path: 'author',
-        //         model: 'User'
-        //     }
-        // });
+        let recipe = await Recipe.findById(req.params.id).populate('ingredients');
+        res.render('recipes/show', { recipe });
+    },
+
+    async recipeEdit(req, res, next) {
+        const ingredients = await Ingredient.find();
         let recipe = await Recipe.findById(req.params.id).populate('ingredients');
         console.log(recipe);
-        res.render('recipes/show', { recipe });
+        res.render('recipes/edit', { recipe, ingredients });
     }
 }

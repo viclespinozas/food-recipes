@@ -51,7 +51,14 @@ module.exports = {
     async recipeEdit(req, res, next) {
         const ingredients = await Ingredient.find();
         let recipe = await Recipe.findById(req.params.id).populate('ingredients');
-        console.log(recipe);
         res.render('recipes/edit', { recipe, ingredients });
+    },
+
+    async recipeUpdate(req, res, next) {
+        let recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
+        await recipe.save();
+
+        req.session.success = 'Recipe updated successfully!';
+        res.redirect(`/recipes/${recipe.id}`);
     }
 }

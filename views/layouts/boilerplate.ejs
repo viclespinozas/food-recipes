@@ -11,15 +11,19 @@
     <script src="https://kit.fontawesome.com/bf1cc3b85f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<!-- Main Wrapper  -->
-<div id="main-wrapper">
-    <% include ../partials/navbar %>
-    <% include ../partials/flash-messages %>
-
-    <%- body -%>
-
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <% include ../partials/navbar %>
+            <% include ../partials/flash-messages %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <%- body -%>
+        </div>
+    </div>
 </div>
-<!-- /Main Wrapper  -->
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

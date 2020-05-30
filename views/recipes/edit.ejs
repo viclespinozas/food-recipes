@@ -2,9 +2,10 @@
 <h1>Edit Recipe!</h1>
 
 <%
-    findWithAttr = function (array, attr, value) {
-        for(var i = 0; i < array.length; i += 1) {
-            if(array[i][attr] === value) {
+    findWithAttr = function (array, value) {
+        let i = 1;
+        for (const ingredient of array) {
+            if(ingredient['_id'] == value) {
                 return i;
             }
         }
@@ -15,13 +16,13 @@
     <input type="text" name="title" placeholder="Title" value="<%= recipe.title %>">
     <select name="ingredients" id="ingredients" multiple>
         <% ingredients.forEach(ingredient => { %>
-            <% if ( findWithAttr(recipe.ingredients, '_id', ingredient.id)  !== -1) { %>
+            <% if ( findWithAttr(recipe.ingredients, String(ingredient.id))  !== -1) { %>
                 <option value="<%= ingredient.id %>" selected><%= ingredient.title %></option>
             <% } else { %>
                     <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
             <% } %>
         <% }); %>
     </select>
-    <textarea name="preparation" id="" cols="30" rows="10"></textarea>
+    <textarea name="preparation" id="" cols="30" rows="10"><%= recipe.preparation %></textarea>
     <input type="submit" value="Update">
 </form>

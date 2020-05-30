@@ -1,28 +1,28 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Edit Recipe!</h1>
 
-<%
-    findWithAttr = function (array, value) {
-        let i = 1;
-        for (const ingredient of array) {
-            if(ingredient['_id'] == value) {
-                return i;
-            }
-        }
-        return -1;
-    }
- %>
+<% include ../../public/javascripts/recipes.ejs %>
+
 <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST">
-    <input type="text" name="title" placeholder="Title" value="<%= recipe.title %>">
-    <select name="ingredients" id="ingredients" multiple>
-        <% ingredients.forEach(ingredient => { %>
-            <% if ( findWithAttr(recipe.ingredients, String(ingredient.id))  !== -1) { %>
-                <option value="<%= ingredient.id %>" selected><%= ingredient.title %></option>
-            <% } else { %>
-                    <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
-            <% } %>
-        <% }); %>
-    </select>
-    <textarea name="preparation" id="" cols="30" rows="10"><%= recipe.preparation %></textarea>
-    <input type="submit" value="Update">
+    <div class="form-group">
+        <label for="title"></label>
+        <input type="text" class="form-control" name="title" placeholder="Title" value="<%= recipe.title %>">
+    </div>
+    <div class="form-group">
+        <label for="ingredients">Ingredients</label>
+        <select class="form-control" name="ingredients" id="ingredients" multiple>
+            <% ingredients.forEach(ingredient => { %>
+                <% if ( findWithAttr(recipe.ingredients, String(ingredient.id))  !== -1) { %>
+                    <option value="<%= ingredient.id %>" selected><%= ingredient.title %></option>
+                <% } else { %>
+                        <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
+                <% } %>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="preparation"></label>
+        <textarea class="form-control" name="preparation" id="preparation" rows="3"><%= recipe.preparation %></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>

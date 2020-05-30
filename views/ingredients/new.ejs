@@ -2,6 +2,9 @@
 <h1>New Ingredient!</h1>
 
 <form action="/ingredients" method="POST">
-    <input type="text" name="title" placeholder="Title">
-    <input type="submit" value="Create">
+    <div class="form-group">
+        <label for="ingredientTitle">Title</label>
+        <input type="text" name="title" class="form-control" id="ingredientTitle" placeholder="Title">
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>

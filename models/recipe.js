@@ -4,8 +4,8 @@ const Ingredient = require('./ingredient');
 const mongoosePaginate = require('mongoose-paginate');
 
 const RecipeSchema = new Schema({
-   title: String,
-   preparation: String,
+    title: String,
+    preparation: String,
     image: [
         {
             url: String, public_id: String

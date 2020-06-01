@@ -1,7 +1,5 @@
 <% layout('layouts/boilerplate') -%>
 
-<% include ../partials/paginateIngredients %>
-
 <table class="table table-striped">
     <thead>
     <tr>
@@ -11,16 +9,16 @@
     </tr>
     </thead>
     <tbody>
-    <% ingredients.docs.forEach(ingredient => { %>
+    <% categories.forEach(category => { %>
         <tr>
             <td>
-                <span><%= ingredient.title %></span>
+                <span><%= category.title %></span>
             </td>
             <td>
-                <a class="text-info" href="/ingredients/<%= ingredient.id %>/edit"><i class="fas fa-edit"></i></a>
+                <a class="text-info" href="/categories/<%= category.id %>/edit"><i class="fas fa-edit"></i></a>
             </td>
             <td>
-                <form action="/ingredients/<%= ingredient.id %>?_method=DELETE" method="POST">
+                <form action="/categories/<%= category.id %>?_method=DELETE" method="POST">
                     <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                 </form>
             </td>

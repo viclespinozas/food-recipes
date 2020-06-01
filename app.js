@@ -16,6 +16,7 @@ const indexRouter = require('./routes/index');
 const ingredientsRouter = require('./routes/ingredients');
 const recipesRouter = require('./routes/recipes');
 const usersRouter = require('./routes/users');
+const categoriesRouter = require('./routes/categories');
 
 //connect to database
 mongoose.connect('mongodb://mongo:27017/food-recipes', {
@@ -73,6 +74,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/ingredients', ingredientsRouter);
+app.use('/categories', categoriesRouter);
 app.use('/recipes', recipesRouter);
 
 // catch 404 and forward to error handler

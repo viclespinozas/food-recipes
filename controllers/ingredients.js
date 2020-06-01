@@ -39,7 +39,7 @@ module.exports = {
             let ingredient = new Ingredient(data);
             await ingredient.save();
             req.session.success = 'Ingredient created successfully!';
-            res.redirect(`/ingredients/${ingredient.id}`);
+            res.redirect('/ingredients');
         }
     },
 
@@ -59,6 +59,12 @@ module.exports = {
         await ingredient.save();
 
         req.session.success = 'Ingredient updated successfully!';
-        res.redirect(`/ingredients/${ingredient.id}`);
+        res.redirect('/ingredients');
+    },
+
+    async ingredientDestroy(req, res, next) {
+        await Ingredient.findByIdAndRemove(req.params.id).exec();
+        req.session.success = 'Ingredient deleted successfully!';
+        res.redirect('/ingredients');
     }
 }

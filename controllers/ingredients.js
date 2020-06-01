@@ -33,7 +33,7 @@ module.exports = {
         });
 
         if (persistedIngredient !== null) {
-            req.session.error = 'Ya existe un ingrediente con el nombre indicado.';
+            req.session.error = 'There is an existent ingredient with the given name.';
             res.redirect('back');
         } else {
             let ingredient = new Ingredient(data);

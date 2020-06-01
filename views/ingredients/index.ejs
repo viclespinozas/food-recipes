@@ -1,5 +1,16 @@
 <% layout('layouts/boilerplate') -%>
 
+<div class="row">
+    <div class="col">
+        <div class="card-body">
+            <a class="text-dark" href="/ingredients/new">
+                New &nbsp;
+                <i class="fas fa-plus-circle text-success"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
 <% include ../partials/paginateIngredients %>
 
 <table class="table table-striped">
@@ -17,7 +28,9 @@
                 <span><%= ingredient.title %></span>
             </td>
             <td>
-                <a class="text-info" href="/ingredients/<%= ingredient.id %>/edit"><i class="fas fa-edit"></i></a>
+                <button class="btn btn-info">
+                    <a class="text-white" href="/ingredients/<%= ingredient.id %>/edit"><i class="fas fa-edit"></i></a>
+                </button>
             </td>
             <td>
                 <form action="/ingredients/<%= ingredient.id %>?_method=DELETE" method="POST">

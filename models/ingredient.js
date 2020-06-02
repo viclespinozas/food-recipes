@@ -13,7 +13,32 @@ const IngredientSchema = new Schema ({
         {
             url: String, public_id: String
         }
+    ],
+    categories: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Category'
+        }
+    ],
+    processTypes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'ProcessType'
+        }
     ]
+});
+
+IngredientSchema.pre('remove', async function(){
+   await Categories.remove({
+       _id: {
+           $in: this.categories
+       }
+   });
+   await ProcessTypes.remove({
+       _id: {
+           $in: this.processTypes
+       }
+   })
 });
 
 IngredientSchema.plugin(mongoosePaginate);

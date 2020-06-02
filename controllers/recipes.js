@@ -60,5 +60,11 @@ module.exports = {
 
         req.session.success = 'Recipe updated successfully!';
         res.redirect(`/recipes/${recipe.id}`);
+    },
+
+    async recipeDestroy(req, res, next) {
+        await Recipe.findByIdAndRemove(req.params.id).exec();
+        req.session.success = 'Recipe deleted successfully!';
+        res.redirect('/recipes');
     }
 }

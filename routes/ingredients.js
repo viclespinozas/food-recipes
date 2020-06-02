@@ -19,7 +19,7 @@ router.get('/',
     asyncErrorHandler(ingredientIndex)
 );
 
-router.get('/new', ingredientNew);
+router.get('/new', asyncErrorHandler(ingredientNew));
 
 router.post('/', asyncErrorHandler(ingredientCreate));
 

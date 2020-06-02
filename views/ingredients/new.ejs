@@ -6,5 +6,21 @@
         <label for="ingredientTitle">Title</label>
         <input type="text" name="title" class="form-control" id="ingredientTitle" placeholder="Title">
     </div>
+    <div class="form-group">
+        <label for="categories">Categories</label>
+        <select class="form-control" name="categories" id="categories" multiple>
+            <% categories.forEach(category => { %>
+                <option value="<%= category.id %>"><%= category.title %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="processTypes">Processing Type</label>
+        <select class="form-control" name="processTypes" id="processTypes" multiple>
+            <% processTypes.forEach(processType => { %>
+                <option value="<%= processType.id %>"><%= processType.title %></option>
+            <% }); %>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

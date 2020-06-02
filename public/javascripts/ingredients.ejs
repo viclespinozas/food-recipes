@@ -1,0 +1,21 @@
+<%
+findCategory = function (array, value) {
+    let i = 1;
+    for (const category of array) {
+        if(category['_id'] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+findProcessType = function (array, value) {
+    let i = 1;
+    for (const type of array) {
+        if(type['_id'] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+%>

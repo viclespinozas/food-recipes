@@ -1,4 +1,6 @@
 const Ingredient = require('../models/ingredient');
+const Categories = require('../models/category');
+const ProcessTypes = require('../models/process-type');
 
 module.exports = {
     async ingredientIndex(req, res, next) {
@@ -19,8 +21,13 @@ module.exports = {
         });
     },
 
-    ingredientNew(req, res, next) {
-        res.render('ingredients/new');
+    async ingredientNew(req, res, next) {
+        const categories = await Categories.find();
+        const processTypes = await ProcessTypes.find();
+        res.render('ingredients/new', {
+            categories,
+            processTypes
+        });
     },
 
     async ingredientCreate(req, res, next) {
@@ -36,7 +43,7 @@ module.exports = {
             req.session.error = 'There is an existent ingredient with the given name.';
             res.redirect('back');
         } else {
-            let ingredient = new Ingredient(data);
+            let ingredient = new Ingredient(req.body);
             await ingredient.save();
             req.session.success = 'Ingredient created successfully!';
             res.redirect('/ingredients');
@@ -49,8 +56,17 @@ module.exports = {
     },
 
     async ingredientEdit(req, res, next) {
-        let ingredient = await Ingredient.findById(req.params.id);
-        res.render('ingredients/edit', { ingredient });
+        let ingredient = await Ingredient.findById(req.params.id)
+            .populate('categories')
+            .populate('processTypes')
+            .exec();
+        const categories = await Categories.find();
+        const processTypes = await ProcessTypes.find();
+        res.render('ingredients/edit', {
+            ingredient,
+            categories,
+            processTypes
+        });
     },
 
     async ingredientUpdate(req, res, next) {

@@ -72,6 +72,8 @@ module.exports = {
     async ingredientUpdate(req, res, next) {
         const ingredient = await Ingredient.findById(req.params.id);
         ingredient.title = req.body.title;
+        ingredient.categories = req.body.categories;
+        ingredient.processTypes = req.body.processTypes;
         await ingredient.save();
 
         req.session.success = 'Ingredient updated successfully!';

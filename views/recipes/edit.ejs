@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Edit Recipe!</h1>
 
-<% include ../../public/javascripts/recipes.ejs %>
+<% include ../../public/javascripts/functions.ejs %>
 
 <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST">
     <div class="form-group">

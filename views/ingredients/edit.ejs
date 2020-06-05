@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Edit Ingredient!</h1>
 
-<% include ../../public/javascripts/ingredients.ejs %>
+<% include ../../public/javascripts/functions.ejs %>
 
 <form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST">
     <div class="form-group">
@@ -12,7 +12,7 @@
         <label for="categories">Categories</label>
         <select class="form-control" name="categories" id="categories" multiple>
             <% categories.forEach(category => { %>
-                <% if ( findCategory(ingredient.categories, String(category.id))  !== -1) { %>
+                <% if ( findWithAttr(ingredient.categories, String(category.id))  !== -1) { %>
                     <option value="<%= category.id %>" selected><%= category.title %></option>
                 <% } else { %>
                     <option value="<%= category.id %>"><%= category.title %></option>
@@ -24,7 +24,7 @@
         <label for="processTypes">Processing Type</label>
         <select class="form-control" name="processTypes" id="processTypes" multiple>
             <% processTypes.forEach(processType => { %>
-                <% if ( findProcessType(ingredient.processTypes, String(processType.id))  !== -1) { %>
+                <% if ( findWithAttr(ingredient.processTypes, String(processType.id))  !== -1) { %>
                     <option value="<%= processType.id %>" selected><%= processType.title %></option>
                 <% } else { %>
                     <option value="<%= processType.id %>"><%= processType.title %></option>

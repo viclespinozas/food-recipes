@@ -4,27 +4,27 @@ const {
     asyncErrorHandler
 } = require('../middleware');
 const {
-    categoryIndex,
-    categoryNew,
-    categoryCreate,
-    categoryShow,
-    categoryEdit,
-    categoryUpdate,
-    categoryDestroy
-} = require('../controllers/categories');
+    measurementIndex,
+    measurementNew,
+    measurementCreate,
+    measurementShow,
+    measurementEdit,
+    measurementUpdate,
+    measurementDestroy
+} = require('../controllers/measurements');
 
-router.get('/', asyncErrorHandler(categoryIndex));
+router.get('/', asyncErrorHandler(measurementIndex));
 
-router.get('/new', categoryNew);
+router.get('/new', measurementNew);
 
-router.post('/', asyncErrorHandler(categoryCreate));
+router.post('/', asyncErrorHandler(measurementCreate));
 
-router.get('/:id', asyncErrorHandler(categoryShow));
+router.get('/:id', asyncErrorHandler(measurementShow));
 
-router.get('/:id/edit', asyncErrorHandler(categoryEdit));
+router.get('/:id/edit', asyncErrorHandler(measurementEdit));
 
-router.put('/:id', asyncErrorHandler(categoryUpdate));
+router.put('/:id', asyncErrorHandler(measurementUpdate));
 
-router.delete('/:id', asyncErrorHandler(categoryDestroy));
+router.delete('/:id', asyncErrorHandler(measurementDestroy));
 
 module.exports = router;

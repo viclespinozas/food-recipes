@@ -19,6 +19,7 @@ const usersRouter = require('./routes/users');
 const categoriesRouter = require('./routes/categories');
 const processTypeRouter = require('./routes/process-types');
 const measurementsRouter = require('./routes/measurements');
+const measurementsCategoryRouter = require('./routes/measurements-category');
 
 //connect to database
 mongoose.connect('mongodb://mongo:27017/food-recipes', {
@@ -80,6 +81,7 @@ app.use('/categories', categoriesRouter);
 app.use('/recipes', recipesRouter);
 app.use('/processing/types', processTypeRouter);
 app.use('/measurements', measurementsRouter);
+app.use('/measurements-category', measurementsCategoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

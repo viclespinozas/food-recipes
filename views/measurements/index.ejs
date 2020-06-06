@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate') -%>
+
+<div class="row">
+    <div class="col">
+        <div class="card-body">
+            <a class="text-dark" href="/measurements/new">
+                New &nbsp;
+                <i class="fas fa-plus-circle text-success"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% measurements.forEach(measurement => { %>
+        <tr>
+            <td>
+                <span><%= measurement.title %></span>
+            </td>
+            <td>
+                <button class="btn btn-info">
+                    <a class="text-white" href="/measurements/<%= measurement.id %>/edit"><i class="fas fa-edit"></i></a>
+                </button>
+            </td>
+            <td>
+                <form action="/measurements/<%= measurement.id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+    <% }); %>
+    </tbody>
+</table>

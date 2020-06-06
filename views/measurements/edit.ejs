@@ -1,0 +1,10 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Edit Measurement!</h1>
+
+<form action="/measurements/<%= measurement.id %>?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="measurement">Title</label>
+        <input type="text" name="title" class="form-control" id="measurement" value="<%= measurement.title %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

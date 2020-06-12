@@ -1,5 +1,7 @@
 const Recipe = require('../models/recipe');
 const Ingredient = require('../models/ingredient');
+const Measurement = require('../models/measurement');
+const IngredientMeasurement = require('../models/ingredient-measurement');
 
 module.exports = {
     async recipeIndex(req, res, next) {
@@ -22,8 +24,10 @@ module.exports = {
 
     async recipeNew(req, res, next) {
         const ingredients = await Ingredient.find();
+        const measurements = await Measurement.find();
         res.render('recipes/new', {
-            ingredients: ingredients
+            ingredients,
+            measurements
         });
     },
 
@@ -36,7 +40,27 @@ module.exports = {
             req.session.error = "Ya existe una receta con el nombre indicado.";
             res.redirect('back');
         } else {
-            let recipe = new Recipe(req.body);
+            let data = {
+                title: req.body.title,
+                preparation: req.body.preparation
+            }
+            let recipe = new Recipe(data);
+            await recipe.save();
+
+            let ingredientMeasurementList = JSON.parse(req.body.ingredientsMeasurements);
+            ingredientMeasurementList.forEach(recipeIngredient => {
+                let imData = {
+                    ingredient: recipeIngredient.ingredient,
+                    measurement: recipeIngredient.measurement,
+                    weight: recipeIngredient.weight
+                }
+
+                let ingredientMeasurement = new IngredientMeasurement(imData);
+                ingredientMeasurement.save();
+
+                recipe.ingredientsMeasurements.push(ingredientMeasurement);
+            });
+
             await recipe.save();
             req.session.success = 'Recipe created successfully!.';
             res.redirect(`/recipes/${recipe.id}`);
@@ -44,14 +68,46 @@ module.exports = {
     },
 
     async recipeShow(req, res, next) {
-        let recipe = await Recipe.findById(req.params.id).populate('ingredients');
+        let recipe = await Recipe.findById(req.params.id).populate({
+            path: 'ingredientsMeasurements',
+            options: { sort: { '_id': -1 } },
+            populate: [
+                {
+                    path: 'ingredient',
+                    model: 'Ingredient'
+                },
+                {
+                    path: 'measurement',
+                    model: 'Measurement'
+                }
+            ]
+        });
+
         res.render('recipes/show', { recipe });
     },
 
     async recipeEdit(req, res, next) {
         const ingredients = await Ingredient.find();
-        let recipe = await Recipe.findById(req.params.id).populate('ingredients');
-        res.render('recipes/edit', { recipe, ingredients });
+        const measurements = await Measurement.find();
+        let recipe = await Recipe.findById(req.params.id).populate({
+            path: 'ingredientsMeasurements',
+            options: { sort: { '_id': -1 } },
+            populate: [
+                {
+                    path: 'ingredient',
+                    model: 'Ingredient'
+                },
+                {
+                    path: 'measurement',
+                    model: 'Measurement'
+                }
+            ]
+        });
+        res.render('recipes/edit', {
+            recipe,
+            ingredients,
+            measurements
+        });
     },
 
     async recipeUpdate(req, res, next) {

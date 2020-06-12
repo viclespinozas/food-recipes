@@ -1,22 +1,155 @@
 <% layout('layouts/boilerplate') %>
 <h1>New Recipe!</h1>
-
-<form action="/recipes" method="POST">
+<form action="/recipes" method="POST" class="form">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <div class="form-group">
         <label for="recipeTitle">Title</label>
         <input type="text" name="title" id="recipeTitle" class="form-control" placeholder="Title">
     </div>
+    <div class="form-row align-items-center">
+        <div class="col-3">
+            <label for="measurement">Measurement</label>
+            <select name="measurement" id="measurement" class="form-control">
+                <% measurements.forEach(measurement => { %>
+                    <option value="<%= measurement.id %>"><%= measurement.title %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-5">
+            <label for="ingredient">Ingredients</label>
+            <select class="form-control" name="ingredient" id="ingredient">
+                <% ingredients.forEach(ingredient => { %>
+                    <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-3">
+            <label for="weight">Quantity</label>
+            <input type="text" name="weight" class="form-control" id="weight">
+        </div>
+        <div class="col-auto">
+            <label for="">&nbsp;</label>
+            <span class="form-control" id="addIngredient" onclick="insRow();"><i class="fas fa-plus-circle text-success"></i></span>
+        </div>
+    </div>
     <div class="form-group">
-        <label for="ingredients">Ingredients</label>
-        <select class="form-control" name="ingredients" id="ingredients" multiple>
-            <% ingredients.forEach(ingredient => { %>
-                <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
-            <% }); %>
-        </select>
+        <br>
+        <div class="form-group">
+            <table class="table table-striped" id="ingredientsContainer">
+                <thead>
+                    <tr>
+                        <th>Quantity</th>
+                        <th>Measurement</th>
+                        <th>Ingredient</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="form-group">
         <label for="preparation">Preparation</label>
         <textarea class="form-control" name="preparation" id="" cols="30" rows="10"></textarea>
     </div>
+    <div class="form-group">
+        <label for="preparation">Ingredientes List</label>
+        <textarea class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" cols="30" rows="10"></textarea>
+    </div>
     <button type="submit" class="btn btn-primary"> Create </button>
 </form>
+<script>
+    function removeIngredient(btn, data) {
+        const row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+
+        let measurement = data[0]['measurement'];
+        let ingredient = data[0]['ingredient'];
+        let weight = data[0]['weight'];
+
+        let ingredientsMeasurements = JSON.parse(document.getElementById('ingredientsMeasurements').value);
+        const itemToFind = (item) => (item['ingredient'] == ingredient) && (item['measurement'] == measurement) && (item['weight'] == weight);
+        const itemIndex = ingredientsMeasurements.findIndex(itemToFind);
+        if (itemIndex > -1) {
+            ingredientsMeasurements.splice(itemIndex, 1);
+        }
+        document.getElementById('ingredientsMeasurements').value = JSON.stringify(ingredientsMeasurements);
+    }
+
+    function insRow() {
+        let table = document.getElementById('ingredientsContainer').getElementsByTagName('tbody')[0];
+        let tr = table.insertRow();
+        let measurement = document.getElementById('measurement');
+        let ingredient = document.getElementById('ingredient');
+        let weight = document.getElementById('weight');
+
+        let weightCell = tr.insertCell(0);
+        let measurementCell = tr.insertCell(1);
+        let ingredientCell = tr.insertCell(2);
+        let removeButtonCell = tr.insertCell(3);
+
+        /* WEIGHT */
+        let weightCellValue = document.createElement('span');
+        weightCellValue.id = 'ingredientsMeasurements_weight_' + table.rows.length;
+        weightCellValue.textContent = weight.value;
+
+        weightCell.appendChild(weightCellValue);
+
+        /* MEASUREMENT */
+        let measurementCellValue = document.createElement('span');
+        measurementCellValue.id = 'ingredientsMeasurements_measurement_' + table.rows.length;
+        measurementCellValue.textContent = ( measurement.selectedIndex != -1 ) ? measurement.options[measurement.selectedIndex].text : null;
+
+        measurementCell.appendChild(measurementCellValue);
+
+        /* INGREDIENT */
+        let ingredientCellValue = document.createElement('span');
+        ingredientCellValue.id = 'ingredientsMeasurements_ingredient_' + table.rows.length;
+        ingredientCellValue.textContent = ( ingredient.selectedIndex != -1 ) ? ingredient.options[ingredient.selectedIndex].text : null;
+
+        ingredientCell.appendChild(ingredientCellValue);
+
+        /* DELETE BUTTON */
+        let removeButton = document.createElement('span');
+        let removeData = [];
+        let removeDataChild = {
+            ingredient: ingredient.value,
+            measurement: measurement.value,
+            weight: weight.value
+        }
+        removeData.push(removeDataChild);
+        removeButton.setAttribute('onclick', 'removeIngredient(this, '+JSON.stringify(removeData)+')');
+        let removeIcon = document.createElement('i');
+        removeIcon.className = 'fas fa-trash text-danger';
+
+        removeButton.appendChild(removeIcon);
+        removeButtonCell.appendChild(removeButton);
+
+        /* ASSIGN OBJECT AND RETRIEVE IT TO SHOW PROPER NAMES */
+        let ingredientsMeasurements = document.getElementById('ingredientsMeasurements').value;
+        let dataParent = [];
+        if (ingredientsMeasurements) {
+            ingredientsMeasurements = JSON.parse(ingredientsMeasurements);
+            dataParent = ingredientsMeasurements;
+
+            let dataChild = {
+                ingredient: ingredient.value,
+                measurement: measurement.value,
+                weight: weight.value
+            }
+
+            dataParent.push(dataChild);
+        } else {
+            let dataChild = {
+                ingredient: ingredient.value,
+                measurement: measurement.value,
+                weight: weight.value
+            }
+
+            dataParent.push(dataChild);
+        }
+
+        document.getElementById('ingredientsMeasurements').value = JSON.stringify(dataParent);
+    }
+</script>

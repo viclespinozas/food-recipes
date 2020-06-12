@@ -22,5 +22,13 @@
             <% }); %>
         </select>
     </div>
+    <div class="form-group">
+        <label for="measurementCategory">Measurement Category</label>
+        <select class="form-control" name="measurementCategory" id="measurementCategory">
+            <% measurementCategories.forEach(measurementCategory => { %>
+                <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>
+            <% }); %>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

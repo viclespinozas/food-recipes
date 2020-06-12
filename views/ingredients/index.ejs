@@ -17,6 +17,9 @@
     <thead>
     <tr>
         <th scope="col">Name</th>
+        <th scope="col">Category</th>
+        <th scope="col">Process Type</th>
+        <th scope="col">Measurement Category</th>
         <th scope="col"></th>
         <th scope="col"></th>
     </tr>
@@ -26,6 +29,25 @@
         <tr>
             <td>
                 <span><%= ingredient.title %></span>
+            </td>
+            <td>
+                <ul>
+                    <% ingredient.categories.forEach(category => { %>
+                        <li><span><%= category.title %></span></li>
+                    <% }); %>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <% ingredient.processTypes.forEach(processType => { %>
+                        <li><span><%= processType.title %></span></li>
+                    <% }); %>
+                </ul>
+            </td>
+            <td>
+                <% if (ingredient.measurementCategory) { %>
+                    <span><%= ingredient.measurementCategory.ingredient %></span>
+                <% } %>
             </td>
             <td>
                 <button class="btn btn-info">

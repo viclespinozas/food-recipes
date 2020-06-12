@@ -1,11 +1,19 @@
 <% layout('layouts/boilerplate') -%>
-
+<%
+ console.log(recipe);
+ %>
 <p><%= recipe.title %></p>
 <p><b>Ingredientes:</b></p>
 <ul>
-    <% recipe.ingredients.forEach(ingredient => { %>
-        <li><%= ingredient.title %></li>
-    <% }); %>
+<% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
+    <li>
+        <span><%= ingredientMeasurement.weight %></span>
+        <span>|</span>
+        <span><%= ingredientMeasurement.measurement.title %></span>
+        <span>|</span>
+        <span><%= ingredientMeasurement.ingredient.title %></span>
+    </li>
+<% }); %>
 </ul>
 <p><%= recipe.preparation %></p>
 <p><a href="/recipes">Go Home</a></p>

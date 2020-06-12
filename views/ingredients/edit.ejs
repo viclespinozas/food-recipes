@@ -32,5 +32,17 @@
             <% }); %>
         </select>
     </div>
+    <div class="form-group">
+        <label for="measurementCategory">Measurement Category</label>
+        <select class="form-control" name="measurementCategory" id="measurementCategory">
+            <% measurementCategories.forEach(measurementCategory => { %>
+                <% if ( ingredient.measurementCategory && ingredient.measurementCategory.indexOf(measurementCategory.id) !== -1) { %>
+                    <option value="<%= measurementCategory.id %>" selected><%= measurementCategory.ingredient %></option>
+                <% } else { %>
+                    <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>
+                <% } %>
+            <% }); %>
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>

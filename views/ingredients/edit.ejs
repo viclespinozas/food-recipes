@@ -36,7 +36,7 @@
         <label for="measurementCategory">Measurement Category</label>
         <select class="form-control" name="measurementCategory" id="measurementCategory">
             <% measurementCategories.forEach(measurementCategory => { %>
-                <% if ( ingredient.measurementCategory && ingredient.measurementCategory.indexOf(measurementCategory.id) !== -1) { %>
+                <% if ( ingredient.measurementCategory && ingredient.measurementCategory.equals(measurementCategory.id)) { %>
                     <option value="<%= measurementCategory.id %>" selected><%= measurementCategory.ingredient %></option>
                 <% } else { %>
                     <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>
@@ -46,3 +46,4 @@
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
+<!--ingredient.measurementCategory.indexOf(measurementCategory.id)-->

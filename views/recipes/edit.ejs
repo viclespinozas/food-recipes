@@ -73,8 +73,7 @@
         <textarea class="form-control" name="preparation" id="" cols="30" rows="10"><%= recipe.preparation %></textarea>
     </div>
     <div class="form-group">
-        <label for="preparation">Ingredientes List</label>
-        <textarea class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" cols="30" rows="10"><%= JSON.stringify(ingredientsMeasurementsList) %></textarea>
+        <input type="hidden" class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" value="<%= JSON.stringify(ingredientsMeasurementsList) %>">
     </div>
 
     <button type="submit" class="btn btn-primary">Update</button>

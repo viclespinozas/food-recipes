@@ -5,6 +5,10 @@ const Measurement = require('./measurement');
 const mongoosePaginate = require('mongoose-paginate');
 
 const IngredientMeasurementSchema = new Schema({
+    recipe: {
+        type: Schema.Types.ObjectId,
+        ref: 'Recipe'
+    },
     ingredient: {
         type: Schema.Types.ObjectId,
         ref: 'Ingredient'

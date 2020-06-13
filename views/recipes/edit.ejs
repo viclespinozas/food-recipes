@@ -1,8 +1,6 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Edit Recipe!</h1>
 
-<% include ../../public/javascripts/functions.ejs %>
-
 <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST">
     <div class="form-group">
         <label for="title"></label>
@@ -47,16 +45,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                <script>
-                    console.log(<%- JSON.stringify(recipe.ingredientsMeasurements) %>);
-                </script>
                 <% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
-                    <% let i = 1; %>
+                    <%
+                        let i = 1;
+                        let dataParent = [];
+                        let dataChild = {
+                            ingredient: ingredientMeasurement.ingredient.id,
+                            measurement: ingredientMeasurement.measurement.id,
+                            weight: ingredientMeasurement.weight
+                        }
+                        dataParent.push(dataChild);
+                    %>
                     <tr>
                         <td><span id="ingredientsMeasurements_weight_<%= i %>"><%= ingredientMeasurement.weight %></span></td>
                         <td><%= ingredientMeasurement.measurement.title %></td>
                         <td><%= ingredientMeasurement.ingredient.title %></td>
-                        <td><span id="removeIngredient" onclick="removeIngredient(this, this);"><i class="fas fa-trash text-danger"></i></span></td>
+                        <td><span id="removeIngredient" onclick="removeIngredient(this, <%= JSON.stringify( dataParent )%>);"><i class="fas fa-trash text-danger"></i></span></td>
                     </tr>
                     <% i += 1; %>
                 <% }); %>
@@ -70,7 +74,7 @@
     </div>
     <div class="form-group">
         <label for="preparation">Ingredientes List</label>
-        <textarea class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" cols="30" rows="10"><%- JSON.stringify(recipe.ingredientsMeasurements) %></textarea>
+        <textarea class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" cols="30" rows="10"><%= JSON.stringify(ingredientsMeasurementsList) %></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Update</button>

@@ -56,6 +56,7 @@ module.exports = {
                 }
 
                 let ingredientMeasurement = new IngredientMeasurement(imData);
+                ingredientMeasurement.recipe = recipe.id;
                 ingredientMeasurement.save();
 
                 recipe.ingredientsMeasurements.push(ingredientMeasurement);
@@ -103,15 +104,49 @@ module.exports = {
                 }
             ]
         });
+        let ingredientsMeasurementsList = [];
+        if (recipe) {
+            recipe.ingredientsMeasurements.forEach(ingredientMeasurement => {
+               let dataChild = {
+                   ingredient: ingredientMeasurement.ingredient.id,
+                   measurement: ingredientMeasurement.measurement.id,
+                   weight: ingredientMeasurement.weight
+               }
+                ingredientsMeasurementsList.push(dataChild);
+            });
+        }
         res.render('recipes/edit', {
             recipe,
             ingredients,
-            measurements
+            measurements,
+            ingredientsMeasurementsList
         });
     },
 
-    async recipeUpdate(req, res, next) {
-        let recipe = await Recipe.findByIdAndUpdate(req.params.id, req.body);
+    recipeUpdate: async function (req, res, next) {
+        let recipe = await Recipe.findById(req.params.id);
+        recipe.ingredientsMeasurements.forEach(ingredientMeasurement => {
+            recipe.ingredientsMeasurements.remove(ingredientMeasurement);
+        });
+        await IngredientMeasurement.remove({recipe: req.params.id}).exec();
+
+        recipe.title = req.body.title;
+        recipe.preparation = req.body.preparation;
+
+        const ingredientList = JSON.parse(req.body.ingredientsMeasurements);
+        ingredientList.forEach(recipeIngredient => {
+            let imData = {
+                ingredient: recipeIngredient.ingredient,
+                measurement: recipeIngredient.measurement,
+                weight: recipeIngredient.weight,
+                recipe: req.params.id
+            }
+            let ingredientMeasurement = new IngredientMeasurement(imData);
+            ingredientMeasurement.save();
+
+            recipe.ingredientsMeasurements.push(ingredientMeasurement);
+        });
+
         await recipe.save();
 
         req.session.success = 'Recipe updated successfully!';
@@ -119,7 +154,11 @@ module.exports = {
     },
 
     async recipeDestroy(req, res, next) {
-        await Recipe.findByIdAndRemove(req.params.id).exec();
+        let recipe = await Recipe.findByIdAndRemove(req.params.id).exec();
+        recipe.ingredientsMeasurements.forEach(ingredientMeasurement => {
+            recipe.ingredientsMeasurements.remove(ingredientMeasurement);
+        });
+        await IngredientMeasurement.remove({recipe: req.params.id}).exec();
         req.session.success = 'Recipe deleted successfully!';
         res.redirect('/recipes');
     }

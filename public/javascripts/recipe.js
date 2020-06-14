@@ -1,60 +1,58 @@
-function removeIngredient(btn, data) {
-    const row = btn.parentNode.parentNode;
-    row.parentNode.removeChild(row);
+function addNewIngredient() {
+    const elementsList = [
+        {'name': 'weight', 'type': 'input'},
+        {'name': 'measurement', 'type': 'select'},
+        {'name': 'ingredient', 'type': 'select'}
+    ];
+    hasListIngredients();
 
-    let measurement = data[0]['measurement'];
-    let ingredient = data[0]['ingredient'];
-    let weight = data[0]['weight'];
-
-    let ingredientsMeasurements = JSON.parse(document.getElementById('ingredientsMeasurements').value);
-    const itemToFind = (item) => (item['ingredient'] == ingredient) && (item['measurement'] == measurement) && (item['weight'] == weight);
-    const itemIndex = ingredientsMeasurements.findIndex(itemToFind);
-    if (itemIndex > -1) {
-        ingredientsMeasurements.splice(itemIndex, 1);
+    if (!hasListIngredients()) {
+        addIngredientToList(elementsList);
+    } else {
+        let ingredientsList = getIngredientsList();
+        if (checkIngredientInList(ingredientsList)) {
+            alert("The Ingredient is already in the List!");
+        } else {
+            addIngredientToList(elementsList);
+        }
     }
-    document.getElementById('ingredientsMeasurements').value = JSON.stringify(ingredientsMeasurements);
 }
 
-function insRow() {
+function hasListIngredients() {
+    return !!document.getElementById('ingredientsMeasurements').value;
+}
+
+function insertNewRow() {
     let table = document.getElementById('ingredientsContainer').getElementsByTagName('tbody')[0];
-    let tr = table.insertRow();
-    let measurement = document.getElementById('measurement');
-    let ingredient = document.getElementById('ingredient');
-    let weight = document.getElementById('weight');
+    return table.insertRow();
+}
 
-    let weightCell = tr.insertCell(0);
-    let measurementCell = tr.insertCell(1);
-    let ingredientCell = tr.insertCell(2);
-    let removeButtonCell = tr.insertCell(3);
+function insertNewCell(tableRow, cellPosition) {
+    return tableRow.insertCell(cellPosition);
+}
 
-    /* WEIGHT */
-    let weightCellValue = document.createElement('span');
-    weightCellValue.id = 'ingredientsMeasurements_weight_' + table.rows.length;
-    weightCellValue.textContent = weight.value;
+function insertNewElementInCell(tableRowCell, newElement, elementType, elementName) {
+    let cellElement = document.createElement(newElement);
+    if (elementType == 'input') {
+        cellElement.textContent = document.getElementById(elementName).value;
+    } else if (elementType == 'select') {
+        cellElement.textContent = ( document.getElementById(elementName).selectedIndex != -1 ) ?
+            document.getElementById(elementName).options[
+                document.getElementById(elementName).selectedIndex
+            ].text : null;
+    }
 
-    weightCell.appendChild(weightCellValue);
+    tableRowCell.appendChild(cellElement);
+}
 
-    /* MEASUREMENT */
-    let measurementCellValue = document.createElement('span');
-    measurementCellValue.id = 'ingredientsMeasurements_measurement_' + table.rows.length;
-    measurementCellValue.textContent = ( measurement.selectedIndex != -1 ) ? measurement.options[measurement.selectedIndex].text : null;
-
-    measurementCell.appendChild(measurementCellValue);
-
-    /* INGREDIENT */
-    let ingredientCellValue = document.createElement('span');
-    ingredientCellValue.id = 'ingredientsMeasurements_ingredient_' + table.rows.length;
-    ingredientCellValue.textContent = ( ingredient.selectedIndex != -1 ) ? ingredient.options[ingredient.selectedIndex].text : null;
-
-    ingredientCell.appendChild(ingredientCellValue);
-
-    /* DELETE BUTTON */
-    let removeButton = document.createElement('span');
+function insertNewDeleteActionButtonInCell(tableRow, cellPosition, cellElement) {
+    let cell = tableRow.insertCell(cellPosition);
+    let removeButton = document.createElement(cellElement);
     let removeData = [];
     let removeDataChild = {
-        ingredient: ingredient.value,
-        measurement: measurement.value,
-        weight: weight.value
+        ingredient: document.getElementById('ingredient').value,
+        measurement: document.getElementById('measurement').value,
+        weight: document.getElementById('weight').value
     }
     removeData.push(removeDataChild);
     removeButton.setAttribute('onclick', 'removeIngredient(this, '+JSON.stringify(removeData)+')');
@@ -62,14 +60,25 @@ function insRow() {
     removeIcon.className = 'fas fa-trash text-danger';
 
     removeButton.appendChild(removeIcon);
-    removeButtonCell.appendChild(removeButton);
+    cell.appendChild(removeButton);
+}
 
-    /* ASSIGN OBJECT AND RETRIEVE IT TO SHOW PROPER NAMES */
-    let ingredientsMeasurements = document.getElementById('ingredientsMeasurements').value;
+function addIngredientToList(elementsList) {
+    let tableRow = insertNewRow();
+    for (const [index, element] of Object.entries(elementsList)) {
+        let tableRowCell = insertNewCell(tableRow, index);
+        insertNewElementInCell(tableRowCell, 'span', element.type, element.name);
+    }
+    insertNewDeleteActionButtonInCell(tableRow, tableRow.cells.length, 'span');
+    updateIngredientsList();
+}
+
+function updateIngredientsList() {
+    let ingredientsList = document.getElementById('ingredientsMeasurements').value;
     let dataParent = [];
-    if (ingredientsMeasurements) {
-        ingredientsMeasurements = JSON.parse(ingredientsMeasurements);
-        dataParent = ingredientsMeasurements;
+    if (ingredientsList) {
+        ingredientsList = JSON.parse(ingredientsList);
+        dataParent = ingredientsList;
 
         let dataChild = {
             ingredient: ingredient.value,
@@ -89,4 +98,34 @@ function insRow() {
     }
 
     document.getElementById('ingredientsMeasurements').value = JSON.stringify(dataParent);
+}
+
+function getIngredientsList() {
+    return JSON.parse(document.getElementById('ingredientsMeasurements').value);
+}
+
+function checkIngredientInList(ingredientsList) {
+    const itemToFind = (item) =>
+        (item['ingredient'] == document.getElementById('ingredient').value) &&
+        (item['measurement'] == document.getElementById('measurement').value);
+    const itemIndex = ingredientsList.findIndex(itemToFind);
+
+    return itemIndex > -1;
+}
+
+function removeIngredient(tableRow, ingredientData) {
+    const row = tableRow.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+
+    let measurement = ingredientData[0]['measurement'];
+    let ingredient = ingredientData[0]['ingredient'];
+    let weight = ingredientData[0]['weight'];
+
+    let ingredientsMeasurements = JSON.parse(document.getElementById('ingredientsMeasurements').value);
+    const itemToFind = (item) => (item['ingredient'] == ingredient) && (item['measurement'] == measurement) && (item['weight'] == weight);
+    const itemIndex = ingredientsMeasurements.findIndex(itemToFind);
+    if (itemIndex > -1) {
+        ingredientsMeasurements.splice(itemIndex, 1);
+    }
+    document.getElementById('ingredientsMeasurements').value = JSON.stringify(ingredientsMeasurements);
 }

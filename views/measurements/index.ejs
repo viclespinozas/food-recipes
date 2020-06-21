@@ -14,7 +14,8 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <th scope="col">Name</th>
+        <th scope="col">Code Name</th>
+        <th scope="col">Display Name</th>
         <th scope="col"></th>
         <th scope="col"></th>
     </tr>
@@ -23,7 +24,10 @@
     <% measurements.forEach(measurement => { %>
         <tr>
             <td>
-                <span><%= measurement.title %></span>
+                <span><%= measurement.codeName %></span>
+            </td>
+            <td>
+                <span><%= measurement.displayName %></span>
             </td>
             <td>
                 <button class="btn btn-info">

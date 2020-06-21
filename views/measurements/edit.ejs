@@ -3,8 +3,12 @@
 
 <form action="/measurements/<%= measurement.id %>?_method=PUT" method="POST">
     <div class="form-group">
-        <label for="measurement">Title</label>
-        <input type="text" name="title" class="form-control" id="measurement" value="<%= measurement.title %>">
+        <label for="codeName">Code Name</label>
+        <input type="text" name="codeName" class="form-control" id="codeName" value="<%= measurement.codeName %>">
+    </div>
+    <div class="form-group">
+        <label for="displayName">Display Name</label>
+        <input type="text" name="displayName" class="form-control" id="displayName" value="<%= measurement.displayName %>">
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>

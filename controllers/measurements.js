@@ -20,11 +20,12 @@ module.exports = {
 
     async measurementCreate(req, res, next) {
         const data = {
-            title: req.body.title
+            codeName: req.body.codeName,
+            displayName: req.body.displayName
         }
 
         let persistedMeasurement = await Measurement.findOne({
-            title: req.body.title
+            codeName: req.body.codeName
         });
 
         if (persistedMeasurement !== null) {
@@ -50,7 +51,8 @@ module.exports = {
 
     async measurementUpdate(req, res, next) {
         const measurement = await Measurement.findById(req.params.id);
-        measurement.title = req.body.title;
+        measurement.codeName = req.body.codeName;
+        measurement.displayName = req.body.displayName;
         await measurement.save();
 
         req.session.success = 'Measurement updated successfully!';

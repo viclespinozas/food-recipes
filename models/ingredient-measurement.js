@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Ingredient = require('./ingredient');
-const Measurement = require('./measurement');
+const IngredientMeasurementConversion = require('./ingredient-measurement-conversions');
 const mongoosePaginate = require('mongoose-paginate');
 
 const IngredientMeasurementSchema = new Schema({
@@ -19,19 +18,18 @@ const IngredientMeasurementSchema = new Schema({
     },
     weight: {
         type: String
+    },
+    ingredientMeasurementConversion: {
+        type: Schema.Types.ObjectId,
+        ref: "IngredientMeasurementConversion"
     }
 });
 
 IngredientMeasurementSchema.pre('remove', async function() {
-    await Ingredient.remove({
+    await IngredientMeasurementConversion.remove({
         _id: {
-            $in: this.ingredient
+            $in: this.ingredientMeasurementConversion
         }
-    });
-    await Measurement.remove({
-       _id: {
-           $in: this.measurement
-       }
     });
 });
 

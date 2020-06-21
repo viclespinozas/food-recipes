@@ -2,9 +2,11 @@ const Recipe = require('../models/recipe');
 const Ingredient = require('../models/ingredient');
 const Measurement = require('../models/measurement');
 const IngredientMeasurement = require('../models/ingredient-measurement');
+const IngredientMeasurementConversion = require('../models/ingredient-measurement-conversions');
+const Fraction = require('fraction.js');
 
-module.exports = {
-    async recipeIndex(req, res, next) {
+const recipeMethods = {
+    recipeIndex: async function(req, res, next) {
         const { dbQuery } = res.locals;
         let recipes = await Recipe.paginate(dbQuery, {
             page: req.query.page || 1,
@@ -22,7 +24,7 @@ module.exports = {
         });
     },
 
-    async recipeNew(req, res, next) {
+    recipeNew: async function(req, res, next) {
         const ingredients = await Ingredient.find();
         const measurements = await Measurement.find();
         res.render('recipes/new', {
@@ -31,7 +33,7 @@ module.exports = {
         });
     },
 
-    async recipeCreate(req, res, next) {
+    recipeCreate: async function(req, res, next) {
         let persistedRecipe = await Recipe.findOne({
            title: req.body.title
         });
@@ -48,7 +50,7 @@ module.exports = {
             await recipe.save();
 
             let ingredientMeasurementList = JSON.parse(req.body.ingredientsMeasurements);
-            ingredientMeasurementList.forEach(recipeIngredient => {
+            for (const recipeIngredient of ingredientMeasurementList) {
                 let imData = {
                     ingredient: recipeIngredient.ingredient,
                     measurement: recipeIngredient.measurement,
@@ -57,10 +59,12 @@ module.exports = {
 
                 let ingredientMeasurement = new IngredientMeasurement(imData);
                 ingredientMeasurement.recipe = recipe.id;
-                ingredientMeasurement.save();
+
+                ingredientMeasurement = await recipeMethods.createIngredientConversion(ingredientMeasurement);
+                await ingredientMeasurement.save();
 
                 recipe.ingredientsMeasurements.push(ingredientMeasurement);
-            });
+            }
 
             await recipe.save();
             req.session.success = 'Recipe created successfully!.';
@@ -68,7 +72,7 @@ module.exports = {
         }
     },
 
-    async recipeShow(req, res, next) {
+    recipeShow: async function(req, res, next) {
         let recipe = await Recipe.findById(req.params.id).populate({
             path: 'ingredientsMeasurements',
             options: { sort: { '_id': -1 } },
@@ -80,6 +84,10 @@ module.exports = {
                 {
                     path: 'measurement',
                     model: 'Measurement'
+                },
+                {
+                    path: 'ingredientMeasurementConversion',
+                    model: 'IngredientMeasurementConversion'
                 }
             ]
         });
@@ -87,7 +95,7 @@ module.exports = {
         res.render('recipes/show', { recipe });
     },
 
-    async recipeEdit(req, res, next) {
+    recipeEdit: async function(req, res, next) {
         const ingredients = await Ingredient.find();
         const measurements = await Measurement.find();
         let recipe = await Recipe.findById(req.params.id).populate({
@@ -101,6 +109,10 @@ module.exports = {
                 {
                     path: 'measurement',
                     model: 'Measurement'
+                },
+                {
+                    path: 'ingredientMeasurementConversion',
+                    model: 'IngredientMeasurementConversion'
                 }
             ]
         });
@@ -133,19 +145,22 @@ module.exports = {
         recipe.title = req.body.title;
         recipe.preparation = req.body.preparation;
 
-        const ingredientList = JSON.parse(req.body.ingredientsMeasurements);
-        ingredientList.forEach(recipeIngredient => {
+        const ingredientMeasurementList = JSON.parse(req.body.ingredientsMeasurements);
+        for (const recipeIngredient of ingredientMeasurementList) {
             let imData = {
                 ingredient: recipeIngredient.ingredient,
                 measurement: recipeIngredient.measurement,
-                weight: recipeIngredient.weight,
-                recipe: req.params.id
+                weight: recipeIngredient.weight
             }
+
             let ingredientMeasurement = new IngredientMeasurement(imData);
-            ingredientMeasurement.save();
+            ingredientMeasurement.recipe = recipe.id;
+
+            ingredientMeasurement = await recipeMethods.createIngredientConversion(ingredientMeasurement);
+            await ingredientMeasurement.save();
 
             recipe.ingredientsMeasurements.push(ingredientMeasurement);
-        });
+        }
 
         await recipe.save();
 
@@ -153,7 +168,7 @@ module.exports = {
         res.redirect(`/recipes/${recipe.id}`);
     },
 
-    async recipeDestroy(req, res, next) {
+    recipeDestroy: async function(req, res, next) {
         let recipe = await Recipe.findByIdAndRemove(req.params.id).exec();
         recipe.ingredientsMeasurements.forEach(ingredientMeasurement => {
             recipe.ingredientsMeasurements.remove(ingredientMeasurement);
@@ -161,5 +176,278 @@ module.exports = {
         await IngredientMeasurement.remove({recipe: req.params.id}).exec();
         req.session.success = 'Recipe deleted successfully!';
         res.redirect('/recipes');
+    },
+
+    createIngredientConversion: async function (ingredientMeasurement) {
+        const measurement = await Measurement.findById(ingredientMeasurement.measurement);
+        const weight = ingredientMeasurement.weight;
+        const ingredient = await Ingredient.findById(ingredientMeasurement.ingredient)
+            .populate('measurementCategory')
+            .exec();
+
+        let ingredientMeasurementConversion = new IngredientMeasurementConversion();
+        ingredientMeasurementConversion.ingredientMeasurement = ingredientMeasurement.id;
+
+        if (measurement.codeName == "grs") {
+            ingredientMeasurementConversion.grams = weight;
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(weight / ingredient.measurementCategory.weight) ;
+            let cupValue = weight / ingredient.measurementCategory.weight;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = cupValue * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = weight / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = weight / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspValue = cupValue * 16;
+            ingredientMeasurementConversion.tablespoon = tbspValue;
+            /* END OF TBSP CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = cupValue * 48;
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "ml") {
+            ingredientMeasurementConversion.milliliters = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = (weight * 130) / 240;
+            grsValue = (Math.round(grsValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF GRS CONVERSION */
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(weight / 240) ;
+            let cupValue = weight / 240 ;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = grsValue / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = grsValue / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspValue = (weight * 16) / 240;
+            ingredientMeasurementConversion.tablespoon = tbspValue;
+            /* END OF TBSP CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = (weight * 48) / 240;
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "cup") {
+            ingredientMeasurementConversion.cup = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = weight * ingredient.measurementCategory.weight ;
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF GRS CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = weight * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = grsValue / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = grsValue / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspValue = weight * 16;
+            ingredientMeasurementConversion.tablespoon = tbspValue;
+            /* END OF TBSP CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = weight * 48;
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "pnd") {
+            ingredientMeasurementConversion.pound = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = weight * 454;
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF GRS CONVERSION */
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
+            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = cupValue * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = grsValue / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspValue = cupValue * 16;
+            tbspValue = (Math.round(tbspValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.tablespoon = tbspValue;
+            /* END OF TBSP CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = cupValue * 48;
+            tspValue = (Math.round(tspValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "oz") {
+            ingredientMeasurementConversion.ounce = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = weight * 25.2;
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
+            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = cupValue * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = grsValue / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspValue = cupValue * 16;
+            tbspValue = (Math.round(tbspValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.tablespoon = tbspValue;
+            /* END OF TBSP CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = cupValue * 48;
+            tspValue = (Math.round(tspValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "tbsp") {
+            ingredientMeasurementConversion.tablespoon = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = (weight * ingredient.measurementCategory.weight) / 16;
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF TBSP CONVERSION */
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
+            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = cupValue * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = grsValue / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = grsValue / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TSP CONVERSION */
+            let tspValue = weight * 3;
+            ingredientMeasurementConversion.teaspoonful = tspValue;
+            /* END OF TSP CONVERSION */
+        } else if (measurement.codeName == "tsp") {
+            ingredientMeasurementConversion.teaspoonful = weight;
+
+            /* GRS CONVERSION */
+            let grsValue = (weight * ingredient.measurementCategory.weight) / 48;
+            ingredientMeasurementConversion.grams = grsValue;
+            /* END OF TBSP CONVERSION */
+
+            /* CUP CONVERSION */
+            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
+            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
+            /* END OF CUP CONVERSION */
+
+            /* ML CONVERSION */
+            let mlValue = cupValue * 240;
+            mlValue = (Math.round(mlValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.milliliters = mlValue;
+            /* END OF ML CONVERSION */
+
+            /* POUND CONVERSION */
+            let pndValue = grsValue / 454;
+            pndValue = (Math.round(pndValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.pound = pndValue;
+            /* END OF POUND CONVERSION */
+
+            /* OUNCE CONVERSION */
+            let ozValue = grsValue / 25.2;
+            ozValue = (Math.round(ozValue * 100) / 100).toFixed(2);
+            ingredientMeasurementConversion.ounce = ozValue;
+            /* END OF OUNCE CONVERSION */
+
+            /* TBSP CONVERSION */
+            let tbspFractionValue = new Fraction(weight / 3) ;
+            let tbspValue = weight / 3;
+            ingredientMeasurementConversion.tablespoon = tbspFractionValue.toFraction(true);
+            /* END OF TBSP CONVERSION */
+        }
+
+        await ingredientMeasurementConversion.save();
+        ingredientMeasurement.ingredientMeasurementConversion = ingredientMeasurementConversion.id;
+        return ingredientMeasurement;
     }
 }
+
+module.exports = recipeMethods;

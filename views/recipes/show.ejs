@@ -1,19 +1,84 @@
 <% layout('layouts/boilerplate') -%>
-<%
- console.log(recipe);
- %>
 <p><%= recipe.title %></p>
 <p><b>Ingredientes:</b></p>
 <ul>
-<% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
-    <li>
-        <span><%= ingredientMeasurement.weight %></span>
-        <span>|</span>
-        <span><%= ingredientMeasurement.measurement.title %></span>
-        <span>|</span>
-        <span><%= ingredientMeasurement.ingredient.title %></span>
-    </li>
-<% }); %>
+    <% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
+        <li>
+            <span><%= ingredientMeasurement.weight %></span>
+            <span>|</span>
+            <span><%= ingredientMeasurement.measurement.displayName %></span>
+            <span>|</span>
+            <span><%= ingredientMeasurement.ingredient.title %></span>
+            <% if (ingredientMeasurement.ingredientMeasurementConversion) { %>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop_<%= ingredientMeasurement.id %>">
+                    <span><i class="fas fa-eye"></i></span>
+                </button>
+                <div class="modal fade" id="staticBackdrop_<%= ingredientMeasurement.id %>" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">More Conversions</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Measurement</th>
+                                                        <th>Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>GRS</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.grams %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ML</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.milliliters %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CUP</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.cup %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>PND</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.pound %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>OZ</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.ounce %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>TBSP</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.tablespoon %></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>TSP</td>
+                                                        <td><%= ingredientMeasurement.ingredientMeasurementConversion.teaspoonful %></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Understood</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <% } %>
+        </li>
+    <% }); %>
 </ul>
 <p><%= recipe.preparation %></p>
 <p><a href="/recipes">Go Home</a></p>

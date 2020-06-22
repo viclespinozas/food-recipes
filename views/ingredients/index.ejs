@@ -31,14 +31,18 @@
                 <span><%= ingredient.title %></span>
             </td>
             <td>
-                <ul>
-                    <% ingredient.categories.forEach(category => { %>
-                        <li><span><%= category.title %></span></li>
-                    <% }); %>
-                </ul>
+                <% if (ingredient.categories) { %>
+                    <ul>
+                        <% ingredient.categories.forEach(category => { %>
+                            <li><span><%= category.title %></span></li>
+                        <% }); %>
+                    </ul>
+                <% } %>
             </td>
             <td>
-                <span><%= ingredient.processType.title %></span>
+                <% if (ingredient.processType) { %>
+                    <span><%= ingredient.processType.title %></span>
+                <% } %>
             </td>
             <td>
                 <% if (ingredient.measurementCategory) { %>

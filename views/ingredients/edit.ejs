@@ -12,7 +12,7 @@
         <label for="categories">Categories</label>
         <select class="form-control" name="categories" id="categories" multiple>
             <% categories.forEach(category => { %>
-                <% if ( findWithAttr(ingredient.categories, String(category.id))  !== -1) { %>
+                <% if ( ingredient.categories && findWithAttr(ingredient.categories, String(category.id))  !== -1) { %>
                     <option value="<%= category.id %>" selected><%= category.title %></option>
                 <% } else { %>
                     <option value="<%= category.id %>"><%= category.title %></option>
@@ -24,7 +24,7 @@
         <label for="processType">Processing Type</label>
         <select class="form-control" name="processType" id="processType">
             <% processTypes.forEach(processType => { %>
-                <% if ( findWithAttr(ingredient.processType, String(processType.id))  !== -1) { %>
+                <% if ( ingredient.processType && ingredient.processType.equals(processType.id)) { %>
                     <option value="<%= processType.id %>" selected><%= processType.title %></option>
                 <% } else { %>
                     <option value="<%= processType.id %>"><%= processType.title %></option>

@@ -11,6 +11,8 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const User = require('./models/user');
+const seedIngredients = require('./seeds');
+seedIngredients();
 
 const indexRouter = require('./routes/index');
 const ingredientsRouter = require('./routes/ingredients');

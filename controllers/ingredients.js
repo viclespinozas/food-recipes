@@ -99,7 +99,7 @@ module.exports = {
         const ingredient = await Ingredient.findById(req.params.id);
         ingredient.title = req.body.title;
         ingredient.categories = req.body.categories;
-        ingredient.processTypes = req.body.processTypes;
+        ingredient.processType = req.body.processType;
         ingredient.measurementCategory = req.body.measurementCategory;
         await ingredient.save();
 

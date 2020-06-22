@@ -21,7 +21,7 @@
             <label for="ingredient">Ingredients</label>
             <select class="form-control" name="ingredient" id="ingredient">
                 <% ingredients.forEach(ingredient => { %>
-                    <option value="<%= ingredient.id %>"><%= ingredient.title %></option>
+                    <option value="<%= ingredient.id %>"><%= ingredient.title %> (<%= ingredient.processType.title %>)</option>
                 <% }); %>
             </select>
         </div>
@@ -61,7 +61,7 @@
                     <tr>
                         <td><span id="ingredientsMeasurements_weight_<%= i %>"><%= ingredientMeasurement.weight %></span></td>
                         <td><%= ingredientMeasurement.measurement.displayName %></td>
-                        <td><%= ingredientMeasurement.ingredient.title %></td>
+                        <td><%= ingredientMeasurement.ingredient.title %> (<%= ingredientMeasurement.ingredient.processType.title %>)</td>
                         <td><span id="removeIngredient" onclick="removeIngredient(this, <%= JSON.stringify( dataParent )%>);"><i class="fas fa-trash text-danger"></i></span></td>
                     </tr>
                     <% i += 1; %>

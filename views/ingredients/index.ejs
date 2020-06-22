@@ -38,11 +38,7 @@
                 </ul>
             </td>
             <td>
-                <ul>
-                    <% ingredient.processTypes.forEach(processType => { %>
-                        <li><span><%= processType.title %></span></li>
-                    <% }); %>
-                </ul>
+                <span><%= ingredient.processType.title %></span>
             </td>
             <td>
                 <% if (ingredient.measurementCategory) { %>

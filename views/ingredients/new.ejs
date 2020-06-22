@@ -15,8 +15,8 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="processTypes">Processing Type</label>
-        <select class="form-control" name="processTypes" id="processTypes" multiple>
+        <label for="processType">Processing Type</label>
+        <select class="form-control" name="processType" id="processType">
             <% processTypes.forEach(processType => { %>
                 <option value="<%= processType.id %>"><%= processType.title %></option>
             <% }); %>

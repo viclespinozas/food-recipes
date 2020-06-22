@@ -21,10 +21,10 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="processTypes">Processing Type</label>
-        <select class="form-control" name="processTypes" id="processTypes" multiple>
+        <label for="processType">Processing Type</label>
+        <select class="form-control" name="processType" id="processType">
             <% processTypes.forEach(processType => { %>
-                <% if ( findWithAttr(ingredient.processTypes, String(processType.id))  !== -1) { %>
+                <% if ( findWithAttr(ingredient.processType, String(processType.id))  !== -1) { %>
                     <option value="<%= processType.id %>" selected><%= processType.title %></option>
                 <% } else { %>
                     <option value="<%= processType.id %>"><%= processType.title %></option>

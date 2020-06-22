@@ -18,12 +18,10 @@ const IngredientSchema = new Schema ({
             ref: 'Category'
         }
     ],
-    processTypes: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'ProcessType'
-        }
-    ],
+    processType: {
+        type: Schema.Types.ObjectId,
+        ref: 'ProcessType'
+    },
     measurementCategory: {
         type: Schema.Types.ObjectId,
         ref: 'MeasurementCategory'

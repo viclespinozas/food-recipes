@@ -25,7 +25,7 @@ const recipeMethods = {
     },
 
     recipeNew: async function(req, res, next) {
-        const ingredients = await Ingredient.find();
+        const ingredients = await Ingredient.find().populate('processType');
         const measurements = await Measurement.find();
         res.render('recipes/new', {
             ingredients,
@@ -96,7 +96,7 @@ const recipeMethods = {
     },
 
     recipeEdit: async function(req, res, next) {
-        const ingredients = await Ingredient.find();
+        const ingredients = await Ingredient.find().populate('processType');
         const measurements = await Measurement.find();
         let recipe = await Recipe.findById(req.params.id).populate({
             path: 'ingredientsMeasurements',
@@ -104,7 +104,13 @@ const recipeMethods = {
             populate: [
                 {
                     path: 'ingredient',
-                    model: 'Ingredient'
+                    model: 'Ingredient',
+                    populate: [
+                        {
+                            path: 'processType',
+                            model: 'ProcessType'
+                        }
+                    ]
                 },
                 {
                     path: 'measurement',

@@ -16,7 +16,7 @@ module.exports = {
                     model:'Category',
                 },
                 {
-                    path: 'processTypes',
+                    path: 'processType',
                     select: 'title',
                     model: 'ProcessType'
                 },
@@ -52,7 +52,10 @@ module.exports = {
 
     async ingredientCreate(req, res, next) {
         const data = {
-            title: req.body.title
+            title: req.body.title,
+            categories: req.body.categories,
+            processType: req.body.processType,
+            measurementCategory: req.body.measurementCategory
         }
 
         let persistedIngredient = await Ingredient.findOne({
@@ -63,7 +66,7 @@ module.exports = {
             req.session.error = 'There is an existent ingredient with the given name.';
             res.redirect('back');
         } else {
-            let ingredient = new Ingredient(req.body);
+            let ingredient = new Ingredient(data);
             await ingredient.save();
             req.session.success = 'Ingredient created successfully!';
             res.redirect('/ingredients');

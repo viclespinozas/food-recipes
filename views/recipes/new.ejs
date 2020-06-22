@@ -19,7 +19,10 @@
             <label for="ingredient">Ingredients</label>
             <select class="form-control" name="ingredient" id="ingredient">
                 <% ingredients.forEach(ingredient => { %>
-                    <option value="<%= ingredient.id %>"><%= ingredient.title %> (<%= ingredient.processType.title %>)</option>
+                    <option value="<%= ingredient.id %>">
+                        <%= ingredient.title %>
+                        <% if (ingredient.processType) { %>(<%= ingredient.processType.title %>)<% } %>
+                    </option>
                 <% }); %>
             </select>
         </div>

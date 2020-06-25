@@ -5,7 +5,7 @@ module.exports = {
         let categories = await Category.find({});
 
         if (!categories) {
-            res.local.error = "No categories created yet!";
+            res.local.error = "No hay categorías creadas todavía!";
         }
 
         res.render('categories/index', {
@@ -27,12 +27,12 @@ module.exports = {
         });
 
         if (persistedCategory !== null) {
-            req.session.error = 'There is an existent category with that name!.';
+            req.session.error = 'Ya existe una categoría con el nombre indicado!.';
             res.redirect('back');
         } else {
             let category = new Category(data);
             await category.save();
-            req.session.success = 'Category created successfully!';
+            req.session.success = 'Categoría creada satisfactoriamente!';
             res.redirect('/categories');
         }
     },
@@ -52,13 +52,13 @@ module.exports = {
         category.title = req.body.title;
         await category.save();
 
-        req.session.success = 'Category updated successfully!';
+        req.session.success = 'Categoría actualizada satisfactoriamente!';
         res.redirect('/categories');
     },
 
     async categoryDestroy(req, res, next) {
         await Category.findByIdAndRemove(req.params.id).exec();
-        req.session.success = 'Category deleted successfully!';
+        req.session.success = 'Categoría eliminada satisfactoriamente!';
         res.redirect('/categories');
     }
 }

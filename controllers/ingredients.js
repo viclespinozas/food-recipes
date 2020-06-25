@@ -32,7 +32,7 @@ module.exports = {
         });
         ingredients.page = Number(ingredients.page);
         if (!ingredients.docs.length && res.locals.query) {
-            res.locals.error = "No results match that query.";
+            res.locals.error = "No hay ingredientes creados todavía";
         }
         res.render('ingredients/index', {
             ingredients: ingredients
@@ -63,12 +63,12 @@ module.exports = {
         });
 
         if (persistedIngredient !== null) {
-            req.session.error = 'There is an existent ingredient with the given name.';
+            req.session.error = 'Ya existe un ingrediente con el nombre indicado.';
             res.redirect('back');
         } else {
             let ingredient = new Ingredient(data);
             await ingredient.save();
-            req.session.success = 'Ingredient created successfully!';
+            req.session.success = 'Ingrediente creado satisfactoriamente!';
             res.redirect('/ingredients');
         }
     },
@@ -103,13 +103,13 @@ module.exports = {
         ingredient.measurementCategory = req.body.measurementCategory;
         await ingredient.save();
 
-        req.session.success = 'Ingredient updated successfully!';
+        req.session.success = 'Ingrediente actualizado satisfactoriamente!';
         res.redirect('/ingredients');
     },
 
     async ingredientDestroy(req, res, next) {
         await Ingredient.findByIdAndRemove(req.params.id).exec();
-        req.session.success = 'Ingredient deleted successfully!';
+        req.session.success = 'Ingrediente eliminado satisfactoriamente!';
         res.redirect('/ingredients');
     }
 }

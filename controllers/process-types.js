@@ -5,7 +5,7 @@ module.exports = {
         let processTypes = await ProcessType.find({});
 
         if (!processTypes) {
-            res.locals.error = "You have not created types yet!.";
+            res.locals.error = "No hay tipos de procesado creados todavía!.";
         }
 
         res.render('process-types/index', {
@@ -27,12 +27,12 @@ module.exports = {
         });
 
         if (persistedProcessType !== null) {
-            req.session.error = 'There is an existent process type with the given name.';
+            req.session.error = 'Ya existe un tipo de procesado con el nombre indicado.';
             res.redirect('back');
         } else {
             let processType = new ProcessType(data);
             await processType.save();
-            req.session.success = 'process type created successfully!';
+            req.session.success = 'Tipo de procesado creado satisfactoriamente!';
             res.redirect('/processing/types');
         }
     },
@@ -52,13 +52,13 @@ module.exports = {
         processType.title = req.body.title;
         await processType.save();
 
-        req.session.success = 'Process Type updated successfully!';
+        req.session.success = 'Tipo de procesado actualizado satisfactoriamente!';
         res.redirect('/processing/types');
     },
 
     async processTypeDestroy(req, res, next) {
         await ProcessType.findByIdAndRemove(req.params.id).exec();
-        req.session.success = 'Process Type deleted successfully!';
+        req.session.success = 'Tipo de procesado eliminado satisfactoriamente!';
         res.redirect('/processing/types');
     }
 }

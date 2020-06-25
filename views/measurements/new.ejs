@@ -1,14 +1,14 @@
 <% layout('layouts/boilerplate') -%>
-<h1>New Measurement!</h1>
+<h1>Nueva Medida</h1>
 
 <form action="/measurements" method="POST">
     <div class="form-group">
-        <label for="codeName">Code Name</label>
+        <label for="codeName">Código</label>
         <input type="text" name="codeName" class="form-control" id="codeName" placeholder="grs">
     </div>
     <div class="form-group">
-        <label for="displayName">Display Name</label>
+        <label for="displayName">Nombre</label>
         <input type="text" name="displayName" class="form-control" id="displayName" placeholder="Grams">
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary">Crear</button>
 </form>

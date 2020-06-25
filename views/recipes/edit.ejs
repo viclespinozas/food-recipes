@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') -%>
 <div class="card-body">
-<h1>Edit Recipe!</h1>
+<h1>Editar Receta</h1>
 </div>
 
 <form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST">
@@ -10,7 +10,7 @@
     </div>
     <div class="form-row align-items-center">
         <div class="col-3">
-            <label for="measurement">Measurement</label>
+            <label for="measurement">Medida</label>
             <select name="measurement" id="measurement" class="form-control">
                 <% measurements.forEach(measurement => { %>
                     <option value="<%= measurement.id %>"><%= measurement.displayName %></option>
@@ -18,7 +18,7 @@
             </select>
         </div>
         <div class="col-5">
-            <label for="ingredient">Ingredients</label>
+            <label for="ingredient">Ingredientes</label>
             <select class="form-control" name="ingredient" id="ingredient">
                 <% ingredients.forEach(ingredient => { %>
                     <option value="<%= ingredient.id %>"><%= ingredient.title %> (<%= ingredient.processType.title %>)</option>
@@ -26,7 +26,7 @@
             </select>
         </div>
         <div class="col-3">
-            <label for="weight">Quantity</label>
+            <label for="weight">Cantidad</label>
             <input type="text" name="weight" class="form-control" id="weight">
         </div>
         <div class="col-auto">
@@ -40,9 +40,9 @@
             <table class="table table-striped" id="ingredientsContainer">
                 <thead>
                 <tr>
-                    <th>Quantity</th>
-                    <th>Measurement</th>
-                    <th>Ingredient</th>
+                    <th>Cantidad</th>
+                    <th>Medida</th>
+                    <th>Ingrediente</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -71,13 +71,13 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="preparation">Preparation</label>
+        <label for="preparation">Preparación</label>
         <textarea class="form-control" name="preparation" id="" cols="30" rows="10"><%= recipe.preparation %></textarea>
     </div>
     <div class="form-group">
         <input type="hidden" class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" value="<%= JSON.stringify(ingredientsMeasurementsList) %>">
     </div>
 
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 <script src="/javascripts/recipe.js"></script>

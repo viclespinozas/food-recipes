@@ -1,15 +1,15 @@
 <% layout('layouts/boilerplate') -%>
-<h1>Edit Ingredient!</h1>
+<h1>Editar Ingrediente!</h1>
 
 <% include ../../public/javascripts/functions.ejs %>
 
 <form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST">
     <div class="form-group">
-        <label for="ingredientTitle">Title</label>
+        <label for="ingredientTitle">Nombre</label>
         <input type="text" name="title" class="form-control" id="ingredientTitle" value="<%= ingredient.title %>">
     </div>
     <div class="form-group">
-        <label for="categories">Categories</label>
+        <label for="categories">Categorías</label>
         <select class="form-control" name="categories" id="categories" multiple>
             <% categories.forEach(category => { %>
                 <% if ( ingredient.categories && findWithAttr(ingredient.categories, String(category.id))  !== -1) { %>
@@ -21,7 +21,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="processType">Processing Type</label>
+        <label for="processType">Tipo de Procesado</label>
         <select class="form-control" name="processType" id="processType">
             <% processTypes.forEach(processType => { %>
                 <% if ( ingredient.processType && ingredient.processType.equals(processType.id)) { %>
@@ -33,7 +33,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="measurementCategory">Measurement Category</label>
+        <label for="measurementCategory">Categoría de Medida</label>
         <select class="form-control" name="measurementCategory" id="measurementCategory">
             <% measurementCategories.forEach(measurementCategory => { %>
                 <% if ( ingredient.measurementCategory && ingredient.measurementCategory.equals(measurementCategory.id)) { %>
@@ -44,6 +44,6 @@
             <% }); %>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 <!--ingredient.measurementCategory.indexOf(measurementCategory.id)-->

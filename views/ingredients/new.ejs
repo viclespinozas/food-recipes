@@ -1,13 +1,13 @@
 <% layout('layouts/boilerplate') -%>
-<h1>New Ingredient!</h1>
+<h1>Nuevo Ingrediente!</h1>
 
 <form action="/ingredients" method="POST">
     <div class="form-group">
-        <label for="ingredientTitle">Title</label>
+        <label for="ingredientTitle">Nombre</label>
         <input type="text" name="title" class="form-control" id="ingredientTitle" placeholder="Title">
     </div>
     <div class="form-group">
-        <label for="categories">Categories</label>
+        <label for="categories">Categorías</label>
         <select class="form-control" name="categories" id="categories" multiple>
             <% categories.forEach(category => { %>
                 <option value="<%= category.id %>"><%= category.title %></option>
@@ -15,7 +15,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="processType">Processing Type</label>
+        <label for="processType">Tipo de Procesado</label>
         <select class="form-control" name="processType" id="processType">
             <% processTypes.forEach(processType => { %>
                 <option value="<%= processType.id %>"><%= processType.title %></option>
@@ -23,7 +23,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="measurementCategory">Measurement Category</label>
+        <label for="measurementCategory">Categoría de Medida</label>
         <select class="form-control" name="measurementCategory" id="measurementCategory">
             <% measurementCategories.forEach(measurementCategory => { %>
                 <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>

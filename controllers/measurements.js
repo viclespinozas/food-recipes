@@ -6,7 +6,7 @@ module.exports = {
         let measurements = await Measurement.find({});
 
         if (!measurements) {
-            res.local.error = "No measurements created yet!";
+            res.local.error = "No hay medidas creadas todavía!";
         }
 
         res.render('measurements/index', {
@@ -29,12 +29,12 @@ module.exports = {
         });
 
         if (persistedMeasurement !== null) {
-            req.session.error = 'There is an existent measurement with that name!.';
+            req.session.error = 'Ya existe una medida con el nombre indicado!.';
             res.redirect('back');
         } else {
             let measurement = new Measurement(data);
             await measurement.save();
-            req.session.success = 'Measurement created successfully!';
+            req.session.success = 'Medida creada satisfactoriamente!';
             res.redirect('/measurements');
         }
     },
@@ -55,13 +55,13 @@ module.exports = {
         measurement.displayName = req.body.displayName;
         await measurement.save();
 
-        req.session.success = 'Measurement updated successfully!';
+        req.session.success = 'Medida actualizada satisfactoriamente!';
         res.redirect('/measurements');
     },
 
     async measurementDestroy(req, res, next) {
         await Measurement.findByIdAndRemove(req.params.id).exec();
-        req.session.success = 'Measurement deleted successfully!';
+        req.session.success = 'Medida eliminada satisfactoriamente!';
         res.redirect('/measurements');
     }
 }

@@ -17,7 +17,7 @@ const recipeMethods = {
         });
         recipes.page = Number(recipes.page);
         if (!recipes.docs.length && res.locals.query) {
-            res.locals.error = "You have not created recipes yet!.";
+            res.locals.error = "No has creado recetas todavía!.";
         }
         res.render('recipes/index', {
             recipes: recipes
@@ -67,7 +67,7 @@ const recipeMethods = {
             }
 
             await recipe.save();
-            req.session.success = 'Recipe created successfully!.';
+            req.session.success = 'Receta creada satisfactoriamente!.';
             res.redirect(`/recipes/${recipe.id}`);
         }
     },
@@ -170,7 +170,7 @@ const recipeMethods = {
 
         await recipe.save();
 
-        req.session.success = 'Recipe updated successfully!';
+        req.session.success = 'Receta actualizada satisfactoriamente!';
         res.redirect(`/recipes/${recipe.id}`);
     },
 
@@ -180,7 +180,7 @@ const recipeMethods = {
             recipe.ingredientsMeasurements.remove(ingredientMeasurement);
         });
         await IngredientMeasurement.remove({recipe: req.params.id}).exec();
-        req.session.success = 'Recipe deleted successfully!';
+        req.session.success = 'Receta eliminada satisfactoriamente!';
         res.redirect('/recipes');
     },
 

@@ -186,7 +186,7 @@ const recipeMethods = {
 
     createIngredientConversion: async function (ingredientMeasurement) {
         const measurement = await Measurement.findById(ingredientMeasurement.measurement);
-        const weight = ingredientMeasurement.weight;
+        let weight = ingredientMeasurement.weight;
         const ingredient = await Ingredient.findById(ingredientMeasurement.ingredient)
             .populate('measurementCategory')
             .exec();
@@ -270,6 +270,10 @@ const recipeMethods = {
         } else if (measurement.codeName == "cup") {
             ingredientMeasurementConversion.cup = weight;
             const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
+            const fractionWeight = weight.search("/");
+            if (fractionWeight > -1) {
+                weight = (Math.round( Number(String(new Fraction(weight))) * 100) / 100).toFixed(2);
+            }
 
             /* GRS CONVERSION */
             let grsValue = weight * grsWeight ;

@@ -11,7 +11,7 @@ function addNewIngredient() {
     } else {
         let ingredientsList = getIngredientsList();
         if (checkIngredientInList(ingredientsList)) {
-            alert("The Ingredient is already in the List!");
+            alert("El ingrediente ya está en la lista!");
         } else {
             addIngredientToList(elementsList);
         }

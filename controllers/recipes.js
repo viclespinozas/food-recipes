@@ -196,10 +196,11 @@ const recipeMethods = {
 
         if (measurement.codeName == "grs") {
             ingredientMeasurementConversion.grams = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* CUP CONVERSION */
-            let cupFractionValue = new Fraction(weight / ingredient.measurementCategory.weight) ;
-            let cupValue = weight / ingredient.measurementCategory.weight;
+            let cupFractionValue = new Fraction(weight / grsWeight) ;
+            let cupValue = weight / grsWeight;
             ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
             /* END OF CUP CONVERSION */
 
@@ -268,9 +269,10 @@ const recipeMethods = {
             /* END OF TSP CONVERSION */
         } else if (measurement.codeName == "cup") {
             ingredientMeasurementConversion.cup = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* GRS CONVERSION */
-            let grsValue = weight * ingredient.measurementCategory.weight ;
+            let grsValue = weight * grsWeight ;
             ingredientMeasurementConversion.grams = grsValue;
             /* END OF GRS CONVERSION */
 
@@ -303,6 +305,7 @@ const recipeMethods = {
             /* END OF TSP CONVERSION */
         } else if (measurement.codeName == "pnd") {
             ingredientMeasurementConversion.pound = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* GRS CONVERSION */
             let grsValue = weight * 454;
@@ -310,8 +313,8 @@ const recipeMethods = {
             /* END OF GRS CONVERSION */
 
             /* CUP CONVERSION */
-            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
-            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            let cupFractionValue = new Fraction(grsValue / grsWeight) ;
+            let cupValue = grsValue / grsWeight ;
             ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
             /* END OF CUP CONVERSION */
 
@@ -340,6 +343,7 @@ const recipeMethods = {
             /* END OF TSP CONVERSION */
         } else if (measurement.codeName == "oz") {
             ingredientMeasurementConversion.ounce = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* GRS CONVERSION */
             let grsValue = weight * 25.2;
@@ -347,8 +351,8 @@ const recipeMethods = {
             /* END OF OUNCE CONVERSION */
 
             /* CUP CONVERSION */
-            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
-            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            let cupFractionValue = new Fraction(grsValue / grsWeight) ;
+            let cupValue = grsValue / grsWeight ;
             ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
             /* END OF CUP CONVERSION */
 
@@ -377,15 +381,17 @@ const recipeMethods = {
             /* END OF TSP CONVERSION */
         } else if (measurement.codeName == "tbsp") {
             ingredientMeasurementConversion.tablespoon = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* GRS CONVERSION */
-            let grsValue = (weight * ingredient.measurementCategory.weight) / 16;
+            let grsValue = (weight * grsWeight) / 16;
+            grsValue = (Math.round(grsValue * 100) / 100).toFixed(2);
             ingredientMeasurementConversion.grams = grsValue;
             /* END OF TBSP CONVERSION */
 
             /* CUP CONVERSION */
-            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
-            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            let cupFractionValue = new Fraction(grsValue / grsWeight) ;
+            let cupValue = grsValue / grsWeight ;
             ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
             /* END OF CUP CONVERSION */
 
@@ -413,15 +419,17 @@ const recipeMethods = {
             /* END OF TSP CONVERSION */
         } else if (measurement.codeName == "tsp") {
             ingredientMeasurementConversion.teaspoonful = weight;
+            const grsWeight = (ingredient.measurementCategory) ? ingredient.measurementCategory.weight : 130;
 
             /* GRS CONVERSION */
-            let grsValue = (weight * ingredient.measurementCategory.weight) / 48;
+            let grsValue = (weight * grsWeight) / 48;
+            grsValue = (Math.round(grsValue * 100) / 100).toFixed(2);
             ingredientMeasurementConversion.grams = grsValue;
             /* END OF TBSP CONVERSION */
 
             /* CUP CONVERSION */
-            let cupFractionValue = new Fraction(grsValue / ingredient.measurementCategory.weight) ;
-            let cupValue = grsValue / ingredient.measurementCategory.weight ;
+            let cupFractionValue = new Fraction(grsValue / grsWeight) ;
+            let cupValue = grsValue / grsWeight ;
             ingredientMeasurementConversion.cup = cupFractionValue.toFraction(true);
             /* END OF CUP CONVERSION */
 

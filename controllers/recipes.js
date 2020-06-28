@@ -25,7 +25,7 @@ const recipeMethods = {
     },
 
     recipeNew: async function(req, res, next) {
-        const ingredients = await Ingredient.find().populate('processType');
+        const ingredients = await Ingredient.find().populate('processType').sort({'title': 1});
         const measurements = await Measurement.find();
         res.render('recipes/new', {
             ingredients,
@@ -52,6 +52,7 @@ const recipeMethods = {
             let ingredientMeasurementList = JSON.parse(req.body.ingredientsMeasurements);
             for (const recipeIngredient of ingredientMeasurementList) {
                 let imData = {
+                    group: recipeIngredient.group,
                     ingredient: recipeIngredient.ingredient,
                     measurement: recipeIngredient.measurement,
                     weight: recipeIngredient.weight
@@ -75,7 +76,7 @@ const recipeMethods = {
     recipeShow: async function(req, res, next) {
         let recipe = await Recipe.findById(req.params.id).populate({
             path: 'ingredientsMeasurements',
-            options: { sort: { '_id': -1 } },
+            options: { sort: { group: -1 } },
             populate: [
                 {
                     path: 'ingredient',
@@ -96,11 +97,11 @@ const recipeMethods = {
     },
 
     recipeEdit: async function(req, res, next) {
-        const ingredients = await Ingredient.find().populate('processType');
+        const ingredients = await Ingredient.find().populate('processType').sort({'title':1});
         const measurements = await Measurement.find();
         let recipe = await Recipe.findById(req.params.id).populate({
             path: 'ingredientsMeasurements',
-            options: { sort: { '_id': -1 } },
+            options: { sort: { group: -1 } },
             populate: [
                 {
                     path: 'ingredient',
@@ -126,6 +127,7 @@ const recipeMethods = {
         if (recipe) {
             recipe.ingredientsMeasurements.forEach(ingredientMeasurement => {
                let dataChild = {
+                   group: ingredientMeasurement.group,
                    ingredient: ingredientMeasurement.ingredient.id,
                    measurement: ingredientMeasurement.measurement.id,
                    weight: ingredientMeasurement.weight
@@ -154,6 +156,7 @@ const recipeMethods = {
         const ingredientMeasurementList = JSON.parse(req.body.ingredientsMeasurements);
         for (const recipeIngredient of ingredientMeasurementList) {
             let imData = {
+                group: recipeIngredient.group,
                 ingredient: recipeIngredient.ingredient,
                 measurement: recipeIngredient.measurement,
                 weight: recipeIngredient.weight

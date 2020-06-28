@@ -1,5 +1,6 @@
 function addNewIngredient() {
     const elementsList = [
+        {'name': 'group', 'type': 'input'},
         {'name': 'weight', 'type': 'input'},
         {'name': 'measurement', 'type': 'select'},
         {'name': 'ingredient', 'type': 'select'}
@@ -81,6 +82,7 @@ function updateIngredientsList() {
         dataParent = ingredientsList;
 
         let dataChild = {
+            group: group.value,
             ingredient: ingredient.value,
             measurement: measurement.value,
             weight: weight.value
@@ -89,6 +91,7 @@ function updateIngredientsList() {
         dataParent.push(dataChild);
     } else {
         let dataChild = {
+            group: group.value,
             ingredient: ingredient.value,
             measurement: measurement.value,
             weight: weight.value
@@ -106,6 +109,7 @@ function getIngredientsList() {
 
 function checkIngredientInList(ingredientsList) {
     const itemToFind = (item) =>
+        (item['group'] == document.getElementById('group').value) &&
         (item['ingredient'] == document.getElementById('ingredient').value) &&
         (item['measurement'] == document.getElementById('measurement').value);
     const itemIndex = ingredientsList.findIndex(itemToFind);
@@ -117,12 +121,13 @@ function removeIngredient(tableRow, ingredientData) {
     const row = tableRow.parentNode.parentNode;
     row.parentNode.removeChild(row);
 
+    let group = ingredientData[0]['group'];
     let measurement = ingredientData[0]['measurement'];
     let ingredient = ingredientData[0]['ingredient'];
     let weight = ingredientData[0]['weight'];
 
     let ingredientsMeasurements = JSON.parse(document.getElementById('ingredientsMeasurements').value);
-    const itemToFind = (item) => (item['ingredient'] == ingredient) && (item['measurement'] == measurement) && (item['weight'] == weight);
+    const itemToFind = (item) => (item['group'] == group) && (item['ingredient'] == ingredient) && (item['measurement'] == measurement) && (item['weight'] == weight);
     const itemIndex = ingredientsMeasurements.findIndex(itemToFind);
     if (itemIndex > -1) {
         ingredientsMeasurements.splice(itemIndex, 1);

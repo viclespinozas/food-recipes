@@ -9,6 +9,10 @@
         <input type="text" class="form-control" name="title" placeholder="Title" value="<%= recipe.title %>">
     </div>
     <div class="form-row align-items-center">
+        <div class="col-2">
+            <label for="group">Nombre de Grupo</label>
+            <input type="text" name="group" id="group" class="form-control" placeholder="Cubierta">
+        </div>
         <div class="col-3">
             <label for="measurement">Medida</label>
             <select name="measurement" id="measurement" class="form-control">
@@ -17,7 +21,7 @@
                 <% }); %>
             </select>
         </div>
-        <div class="col-5">
+        <div class="col-4">
             <label for="ingredient">Ingredientes</label>
             <select class="form-control" name="ingredient" id="ingredient">
                 <% ingredients.forEach(ingredient => { %>
@@ -28,7 +32,7 @@
                 <% }); %>
             </select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <label for="weight">Cantidad</label>
             <input type="text" name="weight" class="form-control" id="weight">
         </div>
@@ -42,12 +46,13 @@
         <div class="form-group">
             <table class="table table-striped" id="ingredientsContainer">
                 <thead>
-                <tr>
-                    <th>Cantidad</th>
-                    <th>Medida</th>
-                    <th>Ingrediente</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th>Nombre de Grupo</th>
+                        <th>Cantidad</th>
+                        <th>Medida</th>
+                        <th>Ingrediente</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                 <% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
@@ -55,6 +60,7 @@
                         let i = 1;
                         let dataParent = [];
                         let dataChild = {
+                            group: ingredientMeasurement.group,
                             ingredient: ingredientMeasurement.ingredient.id,
                             measurement: ingredientMeasurement.measurement.id,
                             weight: ingredientMeasurement.weight
@@ -62,6 +68,7 @@
                         dataParent.push(dataChild);
                     %>
                     <tr>
+                        <td><%= ingredientMeasurement.group %></td>
                         <td><span id="ingredientsMeasurements_weight_<%= i %>"><%= ingredientMeasurement.weight %></span></td>
                         <td><%= ingredientMeasurement.measurement.displayName %></td>
                         <td><%= ingredientMeasurement.ingredient.title %>

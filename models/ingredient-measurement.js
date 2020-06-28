@@ -19,6 +19,9 @@ const IngredientMeasurementSchema = new Schema({
     weight: {
         type: String
     },
+    group: {
+        type: String
+    },
     ingredientMeasurementConversion: {
         type: Schema.Types.ObjectId,
         ref: "IngredientMeasurementConversion"

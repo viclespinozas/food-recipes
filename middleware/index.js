@@ -1,3 +1,5 @@
+const { cloudinary } = require('../cloudinary');
+
 const middleware = {
 	asyncErrorHandler: (fn) =>
 		(req, res, next) => {

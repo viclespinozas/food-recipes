@@ -1,10 +1,14 @@
 <% layout('layouts/boilerplate') -%>
 <h1>Nuevo Ingrediente!</h1>
 
-<form action="/ingredients" method="POST">
+<form action="/ingredients" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="ingredientTitle">Nombre</label>
         <input type="text" name="title" class="form-control" id="ingredientTitle" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <label for="ingredientImage">Imagen</label>
+        <input type="file" name="image" id="ingredientImage" accept="images/*">
     </div>
     <div class="form-group">
         <label for="categories">Categorías</label>

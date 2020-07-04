@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
 const {
     asyncErrorHandler,
     searchAndFilterIngredients
@@ -21,13 +24,13 @@ router.get('/',
 
 router.get('/new', asyncErrorHandler(ingredientNew));
 
-router.post('/', asyncErrorHandler(ingredientCreate));
+router.post('/', upload.single('image'), asyncErrorHandler(ingredientCreate));
 
 router.get('/:id', asyncErrorHandler(ingredientShow));
 
 router.get('/:id/edit', asyncErrorHandler(ingredientEdit));
 
-router.put('/:id', asyncErrorHandler(ingredientUpdate));
+router.put('/:id', upload.single('image'), asyncErrorHandler(ingredientUpdate));
 
 router.delete('/:id', asyncErrorHandler(ingredientDestroy));
 

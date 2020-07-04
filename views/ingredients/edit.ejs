@@ -3,10 +3,15 @@
 
 <% include ../../public/javascripts/functions.ejs %>
 
-<form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST">
+<form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
     <div class="form-group">
         <label for="ingredientTitle">Nombre</label>
         <input type="text" name="title" class="form-control" id="ingredientTitle" value="<%= ingredient.title %>">
+    </div>
+    <div class="form-group">
+        <label for="ingredientImage">Imagen</label>
+        <small>(Esta borrará la imagen actual)</small>
+        <input type="file" name="image" id="ingredientImage" accept="images/*">
     </div>
     <div class="form-group">
         <label for="categories">Categorías</label>

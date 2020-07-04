@@ -7,11 +7,9 @@ const IngredientSchema = new Schema ({
         type: String,
         required: true
     },
-    image: [
-        {
-            url: String, public_id: String
-        }
-    ],
+    image: {
+        secure_url: String, public_id: String
+    },
     categories: [
         {
             type: Schema.Types.ObjectId,

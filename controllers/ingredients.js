@@ -2,6 +2,8 @@ const Ingredient = require('../models/ingredient');
 const Categories = require('../models/category');
 const ProcessTypes = require('../models/process-type');
 const MeasurementCategory = require('../models/measurement-category');
+const { cloudinary } = require('../cloudinary');
+const crypto = require('crypto');
 
 module.exports = {
     async ingredientIndex(req, res, next) {
@@ -51,11 +53,20 @@ module.exports = {
     },
 
     async ingredientCreate(req, res, next) {
+        if (req.file) {
+            const { secure_url, public_id } = req.file;
+            req.body.image = {
+                secure_url,
+                public_id
+            }
+        }
+
         const data = {
             title: req.body.title,
             categories: req.body.categories,
             processType: req.body.processType,
-            measurementCategory: req.body.measurementCategory
+            measurementCategory: req.body.measurementCategory,
+            image: req.body.image
         }
 
         let persistedIngredient = await Ingredient.findOne({
@@ -101,6 +112,11 @@ module.exports = {
         ingredient.categories = req.body.categories;
         ingredient.processType = req.body.processType;
         ingredient.measurementCategory = req.body.measurementCategory;
+        if (req.file) {
+            if (ingredient.image.public_id) await cloudinary.v2.uploader.destroy(ingredient.image.public_id);
+            const { secure_url, public_id } = req.file;
+            ingredient.image = { secure_url, public_id };
+        }
         await ingredient.save();
 
         req.session.success = 'Ingrediente actualizado satisfactoriamente!';
@@ -108,6 +124,8 @@ module.exports = {
     },
 
     async ingredientDestroy(req, res, next) {
+        const ingredient = await Ingredient.findById(req.params.id);
+        if (ingredient.image.public_id) await cloudinary.v2.uploader.destroy(ingredient.image.public_id);
         await Ingredient.findByIdAndRemove(req.params.id).exec();
         req.session.success = 'Ingrediente eliminado satisfactoriamente!';
         res.redirect('/ingredients');

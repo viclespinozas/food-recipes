@@ -16,6 +16,7 @@
 <table class="table table-striped">
     <thead>
     <tr>
+        <th scope="col"></th>
         <th scope="col">Nombre</th>
         <th scope="col">Categoría</th>
         <th scope="col">Tipo de Procesado</th>
@@ -27,6 +28,9 @@
     <tbody>
     <% ingredients.docs.forEach(ingredient => { %>
         <tr>
+            <td>
+                <img src="<%= ingredient.image.secure_url %>" alt="<%= ingredient.title %>" width="50">
+            </td>
             <td>
                 <span><%= ingredient.title %></span>
             </td>

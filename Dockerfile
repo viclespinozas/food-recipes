@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:current-alpine
 RUN mkdir -p /food-recipes
 WORKDIR /food-recipes
 COPY package*.json ./

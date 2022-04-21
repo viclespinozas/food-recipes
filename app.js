@@ -24,11 +24,7 @@ const measurementsRouter = require('./routes/measurements');
 const measurementsCategoriesRouter = require('./routes/measurements-categories');
 
 //connect to database
-mongoose.connect('mongodb://mongo:27017/food-recipes', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-});
+mongoose.connect('mongodb://mongo:27017/food-recipes');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));

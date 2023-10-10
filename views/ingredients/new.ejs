@@ -1,0 +1,38 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Nuevo Ingrediente!</h1>
+
+<form action="/ingredients" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ingredientTitle">Nombre</label>
+        <input type="text" name="title" class="form-control" id="ingredientTitle" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <label for="ingredientImage">Imagen</label>
+        <input type="file" name="image" id="ingredientImage" accept="images/*">
+    </div>
+    <div class="form-group">
+        <label for="categories">Categorías</label>
+        <select class="form-control" name="categories" id="categories" multiple>
+            <% categories.forEach(category => { %>
+                <option value="<%= category.id %>"><%= category.title %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="processType">Tipo de Procesado</label>
+        <select class="form-control" name="processType" id="processType">
+            <% processTypes.forEach(processType => { %>
+                <option value="<%= processType.id %>"><%= processType.title %></option>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="measurementCategory">Categoría de Medida</label>
+        <select class="form-control" name="measurementCategory" id="measurementCategory">
+            <% measurementCategories.forEach(measurementCategory => { %>
+                <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>
+            <% }); %>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

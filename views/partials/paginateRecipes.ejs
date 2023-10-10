@@ -1,0 +1,15 @@
+<div style="margin: 20px 0;">
+    <% if (recipes.page - 1) { %>
+        <a href="<%= paginateUrl %><%= recipes.page - 1 %>">Previa</a>
+    <% } %>
+    <% if(recipes.pages > 1 && recipes.docs.length) { %>
+        <% for (let i = 1; i <= recipes.pages; i++) { %>
+            <a href="<%= paginateUrl %><%= i %>"
+                    <%= i === recipes.page ? 'style=color:#000;' : '' %>
+            ><%= i %></a>
+        <% } %>
+    <% } %>
+    <% if ( (recipes.page + 1) <= recipes.pages ) { %>
+        <a href="<%= paginateUrl %><%= recipes.page + 1 %>">Siguiente</a>
+    <% } %>
+</div>

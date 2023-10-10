@@ -1,0 +1,10 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Editar Tipo de Procesado</h1>
+
+<form action="/categories/<%= processType.id %>?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="processType">Nombre</label>
+        <input type="text" name="title" class="form-control" id="processType" value="<%= processType.title %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>

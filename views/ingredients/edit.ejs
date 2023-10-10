@@ -1,0 +1,54 @@
+<% layout('layouts/boilerplate') -%>
+<h1>Editar Ingrediente!</h1>
+
+<% include ../../public/javascripts/functions.ejs %>
+
+<form action="/ingredients/<%= ingredient.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="ingredientTitle">Nombre</label>
+        <input type="text" name="title" class="form-control" id="ingredientTitle" value="<%= ingredient.title %>">
+    </div>
+    <div class="form-group">
+        <label for="ingredientImage">Imagen</label>
+        <small>(Esta borrará la imagen actual)</small>
+        <input type="file" name="image" id="ingredientImage" accept="images/*">
+    </div>
+    <div class="form-group">
+        <label for="categories">Categorías</label>
+        <select class="form-control" name="categories" id="categories" multiple>
+            <% categories.forEach(category => { %>
+                <% if ( ingredient.categories && findWithAttr(ingredient.categories, String(category.id))  !== -1) { %>
+                    <option value="<%= category.id %>" selected><%= category.title %></option>
+                <% } else { %>
+                    <option value="<%= category.id %>"><%= category.title %></option>
+                <% } %>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="processType">Tipo de Procesado</label>
+        <select class="form-control" name="processType" id="processType">
+            <% processTypes.forEach(processType => { %>
+                <% if ( ingredient.processType && ingredient.processType.equals(processType.id)) { %>
+                    <option value="<%= processType.id %>" selected><%= processType.title %></option>
+                <% } else { %>
+                    <option value="<%= processType.id %>"><%= processType.title %></option>
+                <% } %>
+            <% }); %>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="measurementCategory">Categoría de Medida</label>
+        <select class="form-control" name="measurementCategory" id="measurementCategory">
+            <% measurementCategories.forEach(measurementCategory => { %>
+                <% if ( ingredient.measurementCategory && ingredient.measurementCategory.equals(measurementCategory.id)) { %>
+                    <option value="<%= measurementCategory.id %>" selected><%= measurementCategory.ingredient %></option>
+                <% } else { %>
+                    <option value="<%= measurementCategory.id %>"><%= measurementCategory.ingredient %></option>
+                <% } %>
+            <% }); %>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+<!--ingredient.measurementCategory.indexOf(measurementCategory.id)-->

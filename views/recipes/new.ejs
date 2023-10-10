@@ -1,0 +1,69 @@
+<% layout('layouts/boilerplate') %>
+<h1>Agregar Receta</h1>
+<form action="/recipes" method="POST" class="form">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <div class="form-group">
+        <label for="recipeTitle">Nombre</label>
+        <input type="text" name="title" id="recipeTitle" class="form-control" placeholder="Title">
+    </div>
+    <div class="form-row align-items-center">
+        <div class="col-2">
+            <label for="group">Nombre de Grupo</label>
+            <input type="text" name="group" id="group" class="form-control" placeholder="Cubierta">
+        </div>
+        <div class="col-3">
+            <label for="measurement">Medida</label>
+            <select name="measurement" id="measurement" class="form-control">
+                <% measurements.forEach(measurement => { %>
+                    <option value="<%= measurement.id %>"><%= measurement.displayName %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-4">
+            <label for="ingredient">Ingredientes</label>
+            <select class="form-control" name="ingredient" id="ingredient">
+                <% ingredients.forEach(ingredient => { %>
+                    <option value="<%= ingredient.id %>">
+                        <%= ingredient.title %>
+                        <% if (ingredient.processType) { %>(<%= ingredient.processType.title %>)<% } %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-2">
+            <label for="weight">Cantidad</label>
+            <input type="text" name="weight" class="form-control" id="weight">
+        </div>
+        <div class="col-auto">
+            <label for="">&nbsp;</label>
+            <span class="form-control" id="addIngredient" onclick="addNewIngredient();"><i class="fas fa-plus-circle text-success"></i></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <br>
+        <div class="form-group">
+            <table class="table table-striped" id="ingredientsContainer">
+                <thead>
+                    <tr>
+                        <th>Nombre de Grupo</th>
+                        <th>Cantidad</th>
+                        <th>Medida</th>
+                        <th>Ingrediente</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="preparation">Preparación</label>
+        <textarea class="form-control" name="preparation" id="" cols="30" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="hidden" name="ingredientsMeasurements" id="ingredientsMeasurements" style="height: 150px; width: 100%;">
+    </div>
+    <button type="submit" class="btn btn-primary"> Crear </button>
+</form>
+<script src="/javascripts/recipe.js"></script>

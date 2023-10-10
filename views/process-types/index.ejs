@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate') -%>
+
+<div class="row">
+    <div class="col">
+        <div class="card-body">
+            <a class="text-dark" href="/processing/types/new">
+                Agregar &nbsp;
+                <i class="fas fa-plus-circle text-success"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% processTypes.forEach(processType => { %>
+        <tr>
+            <td>
+                <span><%= processType.title %></span>
+            </td>
+            <td>
+                <button class="btn btn-info">
+                    <a class="text-white" href="/processing/types/<%= processType.id %>/edit"><i class="fas fa-edit"></i></a>
+                </button>
+            </td>
+            <td>
+                <form action="/processing/types/<%= processType.id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+            </td>
+        </tr>
+    <% }); %>
+    </tbody>
+</table>

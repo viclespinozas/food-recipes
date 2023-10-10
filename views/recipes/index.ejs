@@ -1,0 +1,49 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="row">
+    <div class="col">
+        <div class="card-body">
+            <a class="text-dark" href="/recipes/new">
+                Agregar &nbsp;
+                <i class="fas fa-plus-circle text-success"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/paginateRecipes %>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% recipes.docs.forEach(recipe => { %>
+        <tr>
+            <td>
+                <span><%= recipe.title %></span>
+            </td>
+            <td>
+                <button class="btn btn-info">
+                    <a class="text-white" href="/recipes/<%= recipe.id %>/edit"><i class="fas fa-edit"></i></a>
+                </button>
+            </td>
+            <td>
+                <form action="/recipes/<%= recipe.id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+            </td>
+            <td>
+                <button class="btn btn-info">
+                    <a class="text-white" href="/recipes/<%= recipe.id %>"><i class="fas fa-eye"></i></a>
+                </button>
+            </td>
+        </tr>
+    <% }); %>
+    </tbody>
+</table>

@@ -1,0 +1,12 @@
+<%
+findWithAttr = function (array, value) {
+    let i = 1;
+    for (const item of array) {
+        if(item['_id'] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
+%>
+

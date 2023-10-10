@@ -1,0 +1,94 @@
+<% layout('layouts/boilerplate') -%>
+<div class="card-body">
+<h1>Editar Receta</h1>
+</div>
+
+<form action="/recipes/<%= recipe.id %>?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="title"></label>
+        <input type="text" class="form-control" name="title" placeholder="Title" value="<%= recipe.title %>">
+    </div>
+    <div class="form-row align-items-center">
+        <div class="col-2">
+            <label for="group">Nombre de Grupo</label>
+            <input type="text" name="group" id="group" class="form-control" placeholder="Cubierta">
+        </div>
+        <div class="col-3">
+            <label for="measurement">Medida</label>
+            <select name="measurement" id="measurement" class="form-control">
+                <% measurements.forEach(measurement => { %>
+                    <option value="<%= measurement.id %>"><%= measurement.displayName %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-4">
+            <label for="ingredient">Ingredientes</label>
+            <select class="form-control" name="ingredient" id="ingredient">
+                <% ingredients.forEach(ingredient => { %>
+                    <option value="<%= ingredient.id %>">
+                        <%= ingredient.title %>
+                        <% if (ingredient.processType) { %>(<%= ingredient.processType.title %>)<% } %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="col-2">
+            <label for="weight">Cantidad</label>
+            <input type="text" name="weight" class="form-control" id="weight">
+        </div>
+        <div class="col-auto">
+            <label for="">&nbsp;</label>
+            <span class="form-control" id="addIngredient" onclick="addNewIngredient();"><i class="fas fa-plus-circle text-success"></i></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <br>
+        <div class="form-group">
+            <table class="table table-striped" id="ingredientsContainer">
+                <thead>
+                    <tr>
+                        <th>Nombre de Grupo</th>
+                        <th>Cantidad</th>
+                        <th>Medida</th>
+                        <th>Ingrediente</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% recipe.ingredientsMeasurements.forEach(ingredientMeasurement => { %>
+                    <%
+                        let i = 1;
+                        let dataParent = [];
+                        let dataChild = {
+                            group: ingredientMeasurement.group,
+                            ingredient: ingredientMeasurement.ingredient.id,
+                            measurement: ingredientMeasurement.measurement.id,
+                            weight: ingredientMeasurement.weight
+                        }
+                        dataParent.push(dataChild);
+                    %>
+                    <tr>
+                        <td><%= ingredientMeasurement.group %></td>
+                        <td><span id="ingredientsMeasurements_weight_<%= i %>"><%= ingredientMeasurement.weight %></span></td>
+                        <td><%= ingredientMeasurement.measurement.displayName %></td>
+                        <td><%= ingredientMeasurement.ingredient.title %>
+                            <% if (ingredientMeasurement.ingredient.processType) { %>(<%= ingredientMeasurement.ingredient.processType.title %>)<% } %></td>
+                        <td><span id="removeIngredient" onclick="removeIngredient(this, <%= JSON.stringify( dataParent )%>);"><i class="fas fa-trash text-danger"></i></span></td>
+                    </tr>
+                    <% i += 1; %>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="preparation">Preparación</label>
+        <textarea class="form-control" name="preparation" id="" cols="30" rows="10"><%= recipe.preparation %></textarea>
+    </div>
+    <div class="form-group">
+        <input type="hidden" class="form-control" name="ingredientsMeasurements" id="ingredientsMeasurements" value="<%= JSON.stringify(ingredientsMeasurementsList) %>">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+<script src="/javascripts/recipe.js"></script>

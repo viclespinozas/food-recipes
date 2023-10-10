@@ -92,7 +92,7 @@ module.exports = {
     async ingredientEdit(req, res, next) {
         let ingredient = await Ingredient.findById(req.params.id)
             .populate('categories')
-            .populate('processTypes')
+            .populate('processTypes', { strictPopulate: false })
             .populate('measurementCategory')
             .exec();
         const categories = await Categories.find();
